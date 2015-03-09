@@ -7,6 +7,7 @@ import softarch.portal.db.DatabaseFacade;
 
 import java.util.List;
 import java.util.Date;
+import java.util.Properties;
 
 /**
  * This class implements a facade for all of the application layer's
@@ -14,25 +15,21 @@ import java.util.Date;
  * @author Niels Joncheere
  */
 public class ApplicationFacade {
-	private UserManager		userManager;
-	private QueryManager		queryManager;
-	private AdministrationManager	administrationManager;
-	private OperationManager	operationManager;
+	private UserManager userManager;
+	private QueryManager queryManager;
+	private AdministrationManager administrationManager;
+	private OperationManager operationManager;
 
 	/**
 	 * Creates a new application facade.
 	 */
-	public ApplicationFacade(	String dbUser,
-					String dbPassword,
-					String dbUrl) {
+	public ApplicationFacade(Properties properties) {
+		DatabaseFacade dbFacade = new DatabaseFacade(properties);
 		
-		DatabaseFacade dbFacade
-			= new DatabaseFacade(dbUser, dbPassword, dbUrl);
-		
-		userManager		= new UserManager(dbFacade);
-		queryManager		= new QueryManager(dbFacade);
+		userManager             = new UserManager(dbFacade);
+		queryManager		    = new QueryManager(dbFacade);
 		administrationManager	= new AdministrationManager(dbFacade);
-		operationManager	= new OperationManager(dbFacade);
+		operationManager	    = new OperationManager(dbFacade);
 	}
 
 

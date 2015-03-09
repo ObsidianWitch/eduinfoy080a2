@@ -8,6 +8,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Iterator;
+import java.util.Properties;
 
 /**
  * This abstract class implements the behaviour that is to be shared
@@ -22,10 +23,10 @@ public class Database {
 	/**
 	 * Creates a new database.
 	 */
-	public Database(String dbUser, String dbPassword, String dbUrl) {
-		this.dbUser	= dbUser;
-		this.dbPassword	= dbPassword;
-		this.dbUrl	= dbUrl;
+	public Database(Properties properties) {
+		this.dbUser	= properties.getProperty("dbUser");
+		this.dbPassword	= properties.getProperty("dbPassword");
+		this.dbUrl	= properties.getProperty("dbUrl");
 	}
 
 	/**

@@ -2,6 +2,7 @@ package softarch.portal.db;
 
 import java.util.List;
 import java.util.Date;
+import java.util.Properties;
 import java.util.Vector;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -29,8 +30,8 @@ public class RegularDatabase extends Database {
 	/**
 	 * Creates a new regular database.
 	 */
-	public RegularDatabase(String dbUser, String dbPassword, String dbUrl) {
-		super(dbUser, dbPassword, dbUrl);
+	public RegularDatabase(Properties properties) {
+		super(properties);
 	}
 
 	/**

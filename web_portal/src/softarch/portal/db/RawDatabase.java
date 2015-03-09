@@ -1,6 +1,7 @@
 package softarch.portal.db;
 
 import java.util.List;
+import java.util.Properties;
 import java.util.Vector;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -26,8 +27,8 @@ public class RawDatabase extends Database {
 	/**
 	 * Creates a new raw database.
 	 */
-	public RawDatabase(String dbUser, String dbPassword, String dbUrl) {
-		super(dbUser, dbPassword, dbUrl);
+	public RawDatabase(Properties properties) {
+		super(properties);
 	}
 
 	/**

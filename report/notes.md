@@ -9,11 +9,13 @@
     2. ApplicationFacade pass the properties to DatabaseFacade
     3. DatabaseFacade pass the properties to UserDatabase, RegularDatabase and
     RawDatabase
-    * first problem: passing these dependencies is not required, they could
-    directly be retrieved in the Database class
-    * second problem: these properties are SQL related but are required for
+    * problem: these properties are SQL related but are required for
     the DatabaseFacade. We would like to use other databases (e.g. JSON) than
-    SQL ones, so we need to remove these attributes from DatabaseFacade.
+    SQL ones, so we need to remove these dependencies from DatabaseFacade.
+    Still, the configuration need to be retrieved from InternetFacade, so
+    instead of passing the individual properties as parameters, we can pass the
+    object of the *Properties* class which has been loaded from the configuration
+    file.
     * rename these properties with the followng scheme: dbSQL*
 
 * the SQL driver is forced to the HyperSQL JDBC driver, what if we want to use
@@ -21,7 +23,8 @@ another type of SQL database (e.g. MySQL)?
 
 * *Database*, *RawDatabase*, *RegularDatabase* and *userDatabase* are all
 related to an SQL database, we would like to add a database based on the JSON
-format. We need to rename the previously cited class to show their real use.
+format. We need to rename the previously cited class to show their real use
+(and move them into a separate package).
 Then, we need to create interfaces which will be implemented by the databases we
 need (e.g. *SQLRawDatabase* implements the *RawDatabase* interface).
 

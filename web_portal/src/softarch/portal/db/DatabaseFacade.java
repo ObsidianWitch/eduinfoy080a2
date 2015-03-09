@@ -6,6 +6,7 @@ import softarch.portal.data.UserProfile;
 
 import java.util.List;
 import java.util.Date;
+import java.util.Properties;
 
 /**
  * This class implements a facade for all of the database layer's functionality.
@@ -19,16 +20,10 @@ public class DatabaseFacade {
 	/**
 	 * Creates a new database facade.
 	 */
-	public DatabaseFacade(String dbUser, String dbPassword, String dbUrl) {
-		userDb		= new UserDatabase(	dbUser,
-							dbPassword,
-							dbUrl);
-		regularDb	= new RegularDatabase(	dbUser,
-							dbPassword,
-							dbUrl);
-		rawDb		= new RawDatabase(	dbUser,
-							dbPassword,
-							dbUrl);
+	public DatabaseFacade(Properties properties) {
+		userDb		= new UserDatabase(properties);
+		regularDb	= new RegularDatabase(properties);
+		rawDb		= new RawDatabase(properties);
 	}
 
 	/**

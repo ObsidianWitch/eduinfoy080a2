@@ -15,6 +15,7 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.Properties;
 
 /**
  * This class encapsulates the user database.
@@ -24,8 +25,8 @@ public class UserDatabase extends Database {
 	/**
 	 * Creates a new user database.
 	 */
-	public UserDatabase(String dbUser, String dbPassword, String dbUrl) {
-		super(dbUser, dbPassword, dbUrl);
+	public UserDatabase(Properties properties) {
+		super(properties);
 	}
 
 	/**
