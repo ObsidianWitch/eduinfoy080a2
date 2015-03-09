@@ -2,6 +2,7 @@ package softarch.portal.app.test;
 
 import java.util.List;
 import java.util.Iterator;
+import java.util.Properties;
 
 import softarch.portal.app.ApplicationFacade;
 import softarch.portal.data.UserProfile;
@@ -14,10 +15,12 @@ import softarch.portal.data.UserProfile;
 public class TestGetActiveUsers {
 	public static void main(String[] args) {
 		try {
-			ApplicationFacade appFacade = new ApplicationFacade(
-				"njonchee",
-				"chivas12",
-				"localhost/njonchee");
+			Properties properties = new Properties();
+			properties.setProperty("dbUser", "njonchee");
+			properties.setProperty("dbPassword", "chivas12");
+			properties.setProperty("dbUrl", "localhost/njonchee");
+			
+			ApplicationFacade appFacade = new ApplicationFacade(properties);
 			System.out.println(appFacade.login("God", "7475"));
 			System.out.println(appFacade.login("Nilipili", "7475"));
 			System.out.println(appFacade.login("Niels82", "7475"));

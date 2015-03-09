@@ -2,6 +2,7 @@ package softarch.portal.db.test;
 
 import java.util.List;
 import java.util.Iterator;
+import java.util.Properties;
 
 import softarch.portal.data.RawData;
 import softarch.portal.db.RawDatabase;
@@ -13,10 +14,12 @@ import softarch.portal.db.RawDatabase;
 public class TestRawDatabase {
 	public static void main(String[] args) {
 		try {
-			RawDatabase rd = new RawDatabase(
-					"njonchee",
-					"chivas12",
-					"localhost/njonchee");
+			Properties properties = new Properties();
+			properties.setProperty("dbUser", "njonchee");
+			properties.setProperty("dbPassword", "chivas12");
+			properties.setProperty("dbUrl", "localhost/njonchee");
+			
+			RawDatabase rd = new RawDatabase(properties);
 			System.out.println("NUMBER OF RECORDS");
 			System.out.println(rd.getNumberOfRawRecords());
 			System.out.println();

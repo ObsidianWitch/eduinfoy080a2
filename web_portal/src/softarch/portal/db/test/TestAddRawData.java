@@ -5,6 +5,7 @@ import softarch.portal.data.SoftwareRepository;
 import softarch.portal.db.RawDatabase;
 
 import java.util.Date;
+import java.util.Properties;
 import java.net.URL;
 
 /**
@@ -15,10 +16,12 @@ import java.net.URL;
 public class TestAddRawData {
 	public static void main(String[] args) {
 		try {
-			RawDatabase rawDb = new RawDatabase(
-				"njonchee",
-				"chivas12",
-				"localhost/njonchee");
+			Properties properties = new Properties();
+			properties.setProperty("dbUser", "njonchee");
+			properties.setProperty("dbPassword", "chivas12");
+			properties.setProperty("dbUrl", "localhost/njonchee");
+			
+			RawDatabase rawDb = new RawDatabase(properties);
 			RawData rd = new RawData(0, "boe");
 			rd.setStructure(new SoftwareRepository(
 				new Date(),

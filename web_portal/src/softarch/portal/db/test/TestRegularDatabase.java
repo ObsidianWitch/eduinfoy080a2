@@ -2,6 +2,7 @@ package softarch.portal.db.test;
 
 import java.util.List;
 import java.util.Iterator;
+import java.util.Properties;
 
 import softarch.portal.data.RegularData;
 import softarch.portal.db.RegularDatabase;
@@ -34,10 +35,13 @@ public class TestRegularDatabase {
 		System.out.println("informationType : " + informationType);
 		System.out.println("queryString     : " + queryString);
 		System.out.println();
-
-		RegularDatabase db = new RegularDatabase(	dbUser,
-								dbPassword,
-								dbUrl);
+		
+		Properties properties = new Properties();
+		properties.setProperty("dbUser", dbUser);
+		properties.setProperty("dbPassword", dbPassword);
+		properties.setProperty("dbUrl", dbUrl);
+		
+		RegularDatabase db = new RegularDatabase(properties);
 
 		try {
 			System.out.println("NUMBER OF RECORDS");

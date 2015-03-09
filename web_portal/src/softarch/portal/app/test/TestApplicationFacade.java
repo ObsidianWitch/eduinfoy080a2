@@ -4,6 +4,7 @@ import softarch.portal.app.ApplicationFacade;
 import softarch.portal.data.FreeSubscription;
 
 import java.util.Date;
+import java.util.Properties;
 
 /**
  * This is a test program for the application facade.
@@ -19,10 +20,13 @@ public class TestApplicationFacade {
 				"Joncheere",
 				"niels@joncheere.be",
 				new Date());
-			ApplicationFacade appFacade = new ApplicationFacade(
-				"njonchee",
-				"chivas12",
-				"localhost/njonchee");
+			
+			Properties properties = new Properties();
+			properties.setProperty("dbUser", "njonchee");
+			properties.setProperty("dbPassword", "chivas12");
+			properties.setProperty("dbUrl", "localhost/njonchee");
+			
+			ApplicationFacade appFacade = new ApplicationFacade(properties);
 			appFacade.add(fs);
 		}
 		catch (Exception e) {

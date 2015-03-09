@@ -5,11 +5,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import softarch.portal.data.SoftwareRepository;
+import softarch.portal.db.RawDatabase;
 import softarch.portal.db.RegularDatabase;
 
 import java.net.URL;
 import java.util.List;
 import java.util.Iterator;
+import java.util.Properties;
 
 /**
  * This is a test program for the regular database's
@@ -19,10 +21,12 @@ import java.util.Iterator;
 public class TestFindRecordsFrom {
 	public static void main(String[] args) {
 		try {
-			RegularDatabase regularDb = new RegularDatabase(
-				"njonchee",
-				"chivas12",
-				"localhost/njonchee");
+			Properties properties = new Properties();
+			properties.setProperty("dbUser", "njonchee");
+			properties.setProperty("dbPassword", "chivas12");
+			properties.setProperty("dbUrl", "localhost/njonchee");
+			
+			RegularDatabase regularDb = new RegularDatabase(properties);
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 			Date date1 = df.parse("2003-05-20");
 			Date date2 = df.parse("2003-05-21");
