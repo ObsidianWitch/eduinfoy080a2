@@ -19,6 +19,12 @@
 * the SQL driver is forced to the HyperSQL JDBC driver, what if we want to use
 another type of SQL database (e.g. MySQL)?
 
+* *Database*, *RawDatabase*, *RegularDatabase* and *userDatabase* are all
+related to an SQL database, we would like to add a database based on the JSON
+format. We need to rename the previously cited class to show their real use.
+Then, we need to create interfaces which will be implemented by the databases we
+need (e.g. *SQLRawDatabase* implements the *RawDatabase* interface).
+
 * Managers are only wrappers and give more or less direct access to the database
 layer, is it acceptable? See if can refactor so that more processing can be done
 by the application layer.
