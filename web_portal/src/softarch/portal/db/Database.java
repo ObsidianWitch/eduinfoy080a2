@@ -24,9 +24,9 @@ public class Database {
 	 * Creates a new database.
 	 */
 	public Database(Properties properties) {
-		this.dbUser	= properties.getProperty("dbUser");
-		this.dbPassword	= properties.getProperty("dbPassword");
-		this.dbUrl	= properties.getProperty("dbUrl");
+		this.dbUser	= properties.getProperty("dbSQLUser");
+		this.dbPassword	= properties.getProperty("dbSQLPassword");
+		this.dbUrl	= properties.getProperty("dbSQLUrl");
 	}
 
 	/**
