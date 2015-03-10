@@ -111,6 +111,9 @@ cannot directly access the Data Layer. In order for the UI Layer to access data,
 it must go through the Logic Layer via some kind of interface." ([source](http://allthingscs.blogspot.be/2011/03/mvc-vs-3-tier-pattern.html))
 -> is this application really a 3-tiered system?
 
+* The UI layer would gain in clarity by using a template engine (e.g. something
+    similar to twig for php, mustache.java, apache velocity)
+
 # Miscellaneous
 
 The following files were added to git but further changes are not commited :
