@@ -1,6 +1,7 @@
 package softarch.portal.data;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.util.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -63,7 +64,7 @@ public class CheapSubscription extends RegularUser {
 	 * Returns an XML representation of the object.
 	 */
 	public String asXml() {
-		return	"<CheapSubscription>" +
+		return	"<" + getType() + ">" +
 			"<username>" + normalizeXml(username) + "</username>" +
 			// password is not returned,
 			// as it should only be used internally
@@ -75,7 +76,7 @@ public class CheapSubscription extends RegularUser {
 			normalizeXml(emailAddress) +
 			"</emailAddress>" +
 			"<lastLogin>" + df.format(lastLogin) + "</lastLogin>" +
-			"</CheapSubscription>";
+			"</" + getType() + ">";
 	}
 
 	/**
@@ -83,7 +84,7 @@ public class CheapSubscription extends RegularUser {
 	 * the account to a relational database.
 	 */
 	public String asSql() {
-		return	"INSERT INTO CheapSubscription (Username, Password, " +
+		return	"INSERT INTO " + getType() + " (Username, Password, " +
 			"FirstName, LastName, EmailAddress, LastLogin) " +
 			"VALUES (\'" + normalizeSql(username) + "\', \'" +
 			normalizeSql(password) + "\', \'" +
@@ -98,12 +99,17 @@ public class CheapSubscription extends RegularUser {
 	 * the account in a relational database.
 	 */
 	public String asSqlUpdate() {
-		return  "UPDATE CheapSubscription SET Password = \'" +
+		return  "UPDATE " + getType() + " SET Password = \'" +
 			normalizeSql(password) + "\', FirstName = \'" +
 	                normalizeSql(firstName) + "\', LastName = \'" +
 			normalizeSql(lastName) + "\', EmailAddress = \'" +
 	                normalizeSql(emailAddress) + "\', LastLogin = \'" +
 			df.format(lastLogin) + "\' " + "WHERE Username = \'" +
 			normalizeSql(username) + "\';";
+	}
+
+	@Override
+	protected String getType() {
+		return "CheapSubscription";
 	}
 }

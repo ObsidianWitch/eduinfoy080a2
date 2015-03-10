@@ -48,7 +48,7 @@ public class Operator extends UserProfile {
 	 * Returns an XML representation of the object.
 	 */
 	public String asXml() {
-		return	"<Operator>" +
+		return	"<" + getType() + ">" +
 			"<username>" + normalizeXml(username) + "</username>" +
 			// password is not returned,
 			// as it should only be used internally
@@ -60,7 +60,7 @@ public class Operator extends UserProfile {
 			normalizeXml(emailAddress) +
 			"</emailAddress>" +
 			"<lastLogin>" + df.format(lastLogin) + "</lastLogin>" +
-			"</Operator>";
+			"</" + getType() + ">";
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class Operator extends UserProfile {
 	 * the account to a relational database.
 	 */
 	public String asSql() {
-		return	"INSERT INTO Operator (Username, Password, " +
+		return	"INSERT INTO " + getType() + " (Username, Password, " +
 			"FirstName, LastName, EmailAddress, LastLogin) " +
 			"VALUES (\'" + normalizeSql(username) + "\', \'" +
 			normalizeSql(password) + "\', \'" +
@@ -91,12 +91,17 @@ public class Operator extends UserProfile {
 	 * the account in a relational database.
 	 */
 	public String asSqlUpdate() {
-		return  "UPDATE Operator SET Password = \'" + 
+		return  "UPDATE " + getType() + " SET Password = \'" + 
 			normalizeSql(password) + "\', FirstName = \'" +
 			normalizeSql(firstName) + "\', LastName = \'" +
 			normalizeSql(lastName) + "\', EmailAddress = \'" +
 			normalizeSql(emailAddress) + "\', LastLogin = \'" +
 			df.format(lastLogin) + "\' " + "WHERE Username = \'" +
 			normalizeSql(username) + "\';";
+	}
+
+	@Override
+	protected String getType() {
+		return "Operator";
 	}
 }

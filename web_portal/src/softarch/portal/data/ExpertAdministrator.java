@@ -49,7 +49,7 @@ public class ExpertAdministrator extends Administrator {
 	 */
 	public String asXml() {
 	
-		return	"<ExpertAdministrator>" +
+		return	"<" + getType() + ">" +
 			"<username>" + normalizeXml(username) + "</username>" +
 			// password is not returned,
 			// as it should only be used internally
@@ -61,7 +61,7 @@ public class ExpertAdministrator extends Administrator {
 			normalizeXml(emailAddress) +
 			"</emailAddress>" +
 			"<lastLogin>" + df.format(lastLogin) + "</lastLogin>" +
-			"</ExpertAdministrator>";
+			"</" + getType() + ">";
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class ExpertAdministrator extends Administrator {
 	 * the account to a relational database.
 	 */
 	public String asSql() {
-		return	"INSERT INTO ExpertAdministrator (Username, " +
+		return	"INSERT INTO " + getType() + " (Username, " +
 			"Password, FirstName, LastName, EmailAddress, " +
 			"LastLogin) VALUES (\'" + normalizeSql(username) +
 			"\', \'" + normalizeSql(password) +"\', \'" +
@@ -84,12 +84,17 @@ public class ExpertAdministrator extends Administrator {
 	 * the account in a relational database.
 	 */
 	public String asSqlUpdate() {
-		return  "UPDATE ExpertAdministrator SET Password = \'" +
+		return  "UPDATE " + getType() + " SET Password = \'" +
 			normalizeSql(password) + "\', FirstName = \'" +
 			normalizeSql(firstName) + "\', LastName = \'" +
 			normalizeSql(lastName) + "\', EmailAddress = \'" +
 			normalizeSql(emailAddress) + "\', LastLogin = \'" +
 			df.format(lastLogin) + "\' " + "WHERE Username = \'" +
 			normalizeSql(username) + "\';";
+	}
+
+	@Override
+	protected String getType() {
+		return "ExpertAdministrator";
 	}
 }

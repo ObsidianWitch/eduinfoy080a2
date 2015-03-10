@@ -25,6 +25,12 @@ public abstract class UserProfile extends Data {
 	 * redirected to this page.
 	 */
 	public abstract String getDefaultPage();
+	
+	/**
+	 * Type of user profile (e.g. Operator, ExpertAministrator, 
+	 * CheapSubscription)
+	 */
+	protected abstract String getType();
 
 	/**
 	 * Returns an SQL UPDATE string that allows the system to update

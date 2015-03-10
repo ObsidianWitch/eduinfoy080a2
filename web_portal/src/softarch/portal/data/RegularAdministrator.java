@@ -48,7 +48,7 @@ public class RegularAdministrator extends Administrator {
 	 * Returns an XML representation of the object.
 	 */
 	public String asXml() {
-		return	"<RegularAdministrator>" +
+		return	"<" + getType() + ">" +
 			"<username>" + normalizeXml(username) + "</username>" +
 			// password is not returned,
 			// as it should only be used internally
@@ -60,7 +60,7 @@ public class RegularAdministrator extends Administrator {
 			normalizeXml(emailAddress) +
 			"</emailAddress>" +
 			"<lastLogin>" + df.format(lastLogin) + "</lastLogin>" +
-			"</RegularAdministrator>";
+			"</" + getType() + ">";
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class RegularAdministrator extends Administrator {
 	 * the account to a relational database.
 	 */
 	public String asSql() {
-		return	"INSERT INTO RegularAdministrator (Username, " +
+		return	"INSERT INTO " + getType() + " (Username, " +
 			"Password, FirstName, LastName, EmailAddress, " +
 			"LastLogin) VALUES (\'" + normalizeSql(username) +
 			"\', \'" + normalizeSql(password) +"\', \'" +
@@ -83,12 +83,17 @@ public class RegularAdministrator extends Administrator {
 	 * the account in a relational database.
 	 */
 	public String asSqlUpdate() {
-		return  "UPDATE RegularAdministrator SET Password = \'" +
+		return  "UPDATE " + getType() + " SET Password = \'" +
 			normalizeSql(password) + "\', FirstName = \'" +
 			normalizeSql(firstName) + "\', LastName = \'" +
 			normalizeSql(lastName) + "\', EmailAddress = \'" +
 			normalizeSql(emailAddress) + "\', LastLogin = \'" +
 			df.format(lastLogin) + "\' " + "WHERE Username = \'" +
 			normalizeSql(username) + "\';";
+	}
+
+	@Override
+	protected String getType() {
+		return "RegularAdministrator";
 	}
 }

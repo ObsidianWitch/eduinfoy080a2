@@ -1,6 +1,6 @@
 % Assignement 2 notes
 
-# Problems
+# Problems & solutions
 
 * useless dependency injection
     1. InternetFrontEnd.init(): load properties (dbUser, dbPassword et dbUrl)
@@ -116,17 +116,28 @@ it must go through the Logic Layer via some kind of interface." ([source](http:/
 * The UI layer would gain in clarity by using a template engine (e.g. something
     similar to twig for php, mustache.java, apache velocity)
     
-* SQL queries are written directly in Strings, a SQLQueryBuilder and a directory
+* SQL queries are written directly in Strings, a SQLQueryBuilder and a Directory
+    (e.g. Symfony2 & Doctrine)
     could be created to be able to reuse parts of queries
     
-* the data is coupled with the operations which are used on it, each time we
-add a database or a new format, we need to add a *asSomething()* method.
-A visitor pattern could be used.
+* data coupled with the database layer
+    * need a constructor for constructing a data entity from a database result
+    object (e.g. *public CheapSubscription(ResultSet rs)*)
+    * need a way to construct an object which can be inserted/updated into the
+    database (e.g. *asSql()*)
+    * -> Directory idea (e.g. Symfony2 & Doctrine)
 
 * ExpensiveSubscription, CheapSubscription and FreeSubscription are the same
-thing under the hood. They could be grouped as a Subscription with a field
-specifying which type of subscription it is (expensive, cheap or free). It would
-then be easier to add new types of subscription.
+thing under the hood, there is a lot of code duplication. They could be grouped
+as a Subscription with a field specifying which type of subscription it is
+(expensive, cheap or free). It would then be easier to add new types of
+subscription.
+
+* When we modify the *UserProfile* (e.g. add *asJson()* method) it has an impact
+on all subclasses -> may be a pain (visitor pattern).
+
+* UserProfile.getType() is used to have an uniform way to knwow where the data
+must be added -> refacto data
 
 # Miscellaneous
 
@@ -143,3 +154,5 @@ git update-index --assume-unchanged file
 ~~~
 
 ([source](https://stackoverflow.com/questions/936249/stop-tracking-and-ignore-changes-to-a-file-in-git))
+
+The following JSON parsing library was added to the project: https://jsonp.java.net/
