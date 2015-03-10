@@ -22,11 +22,16 @@ public class DatabaseFacade {
 
 	/**
 	 * Creates a new database facade.
+	 * @throws DatabaseException 
 	 */
 	public DatabaseFacade(Properties properties) {
-		userDb		= new UserSQLDatabase(properties);
-		regularDb	= new RegularSQLDatabase(properties);
-		rawDb		= new RawSQLDatabase(properties);
+		String dbType = properties.getProperty("dbType");
+		
+		if (dbType.equals("SQL")) {
+			userDb		= new UserSQLDatabase(properties);
+			regularDb	= new RegularSQLDatabase(properties);
+			rawDb		= new RawSQLDatabase(properties);
+		}
 	}
 
 	/**
@@ -69,7 +74,7 @@ public class DatabaseFacade {
 	 * Returns a list containing all records of the given information type
 	 * that match the given query string.
 	 */
-	public List findRecords(String informationType, String queryString)
+	public List<RegularData> findRecords(String informationType, String queryString)
 		throws DatabaseException {
 
 		return regularDb.findRecords(informationType, queryString);
@@ -79,7 +84,7 @@ public class DatabaseFacade {
 	 * Returns a list containing all records of the given information type
 	 * that were added after the given date.
 	 */
-	public List findRecordsFrom(String informationType, Date date)
+	public List<RegularData> findRecordsFrom(String informationType, Date date)
 		throws DatabaseException {
 
 		return regularDb.findRecordsFrom(informationType, date);
@@ -107,7 +112,7 @@ public class DatabaseFacade {
 	/**
 	 * Returns a list of all raw data.
 	 */
-	public List getRawData()
+	public List<RawData> getRawData()
 		throws DatabaseException {
 
 		return rawDb.getRawData();
