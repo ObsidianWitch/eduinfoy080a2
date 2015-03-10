@@ -17,7 +17,7 @@ import java.util.Properties;
  */
 public class DatabaseFacade {
 	private UserSQLDatabase	userDb;
-	private RegularSQLDatabase	regularDb;
+	private RegularDatabase regularDb;
 	private RawDatabase	rawDb;
 
 	/**

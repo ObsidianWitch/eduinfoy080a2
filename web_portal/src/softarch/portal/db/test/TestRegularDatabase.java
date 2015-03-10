@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Properties;
 
 import softarch.portal.data.RegularData;
+import softarch.portal.db.RegularDatabase;
 import softarch.portal.db.sql.RegularSQLDatabase;
 
 /**
@@ -41,7 +42,7 @@ public class TestRegularDatabase {
 		properties.setProperty("dbPassword", dbPassword);
 		properties.setProperty("dbUrl", dbUrl);
 		
-		RegularSQLDatabase db = new RegularSQLDatabase(properties);
+		RegularDatabase db = new RegularSQLDatabase(properties);
 
 		try {
 			System.out.println("NUMBER OF RECORDS");

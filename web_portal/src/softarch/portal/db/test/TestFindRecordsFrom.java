@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import softarch.portal.data.SoftwareRepository;
+import softarch.portal.db.RegularDatabase;
 import softarch.portal.db.sql.RegularSQLDatabase;
 
 import java.net.URL;
@@ -25,7 +26,7 @@ public class TestFindRecordsFrom {
 			properties.setProperty("dbPassword", "chivas12");
 			properties.setProperty("dbUrl", "localhost/njonchee");
 			
-			RegularSQLDatabase regularDb = new RegularSQLDatabase(properties);
+			RegularDatabase regularDb = new RegularSQLDatabase(properties);
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 			Date date1 = df.parse("2003-05-20");
 			Date date2 = df.parse("2003-05-21");
