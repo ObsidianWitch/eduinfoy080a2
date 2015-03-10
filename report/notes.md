@@ -17,6 +17,8 @@
     object of the *Properties* class which has been loaded from the configuration
     file.
     * rename these properties with the followng scheme: dbSQL*
+    * "The database layer interface should be generic, and not expose the
+    specific requirements of the layer." (cf subject)
 
 * the SQL driver is forced to the HyperSQL JDBC driver, what if we want to use
 another type of SQL database (e.g. MySQL)?
@@ -113,6 +115,18 @@ it must go through the Logic Layer via some kind of interface." ([source](http:/
 
 * The UI layer would gain in clarity by using a template engine (e.g. something
     similar to twig for php, mustache.java, apache velocity)
+    
+* SQL queries are written directly in Strings, a SQLQueryBuilder and a directory
+    could be created to be able to reuse parts of queries
+    
+* the data is coupled with the operations which are used on it, each time we
+add a database or a new format, we need to add a *asSomething()* method.
+A visitor pattern could be used.
+
+* ExpensiveSubscription, CheapSubscription and FreeSubscription are the same
+thing under the hood. They could be grouped as a Subscription with a field
+specifying which type of subscription it is (expensive, cheap or free). It would
+then be easier to add new types of subscription.
 
 # Miscellaneous
 
