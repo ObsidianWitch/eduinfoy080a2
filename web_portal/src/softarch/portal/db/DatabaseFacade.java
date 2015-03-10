@@ -26,12 +26,11 @@ public class DatabaseFacade {
 	 */
 	public DatabaseFacade(Properties properties) {
 		String dbType = properties.getProperty("dbType");
+		AbstractDatabaseFactory df = DatabaseFactoryProducer.getFactory(dbType);
 		
-		if (dbType.equals("SQL")) {
-			userDb		= new UserSQLDatabase(properties);
-			regularDb	= new RegularSQLDatabase(properties);
-			rawDb		= new RawSQLDatabase(properties);
-		}
+		userDb    = df.getUserDatabase(properties);
+		regularDb = df.getRegularDatabase(properties);
+		rawDb     = df.getRawDatabase(properties);
 	}
 
 	/**

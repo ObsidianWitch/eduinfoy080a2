@@ -27,6 +27,79 @@ format. We need to rename the previously cited class to show their real use
 (and move them into a separate package).
 Then, we need to create interfaces which will be implemented by the databases we
 need (e.g. *SQLRawDatabase* implements the *RawDatabase* interface).
+Finally, the type of database can be switched by modifying a property in
+*web_portal.cfg*.
+    * the database type can be tested to decide which classes to instantiate in
+    *DatabaseFacade*. However, each time we want to add a type of database in
+    the application we need to also add it in the *if..else* of the
+    *DatabaseFacade* constructor.
+    ~~~
+     	if (dbType.equals("SQL")) {
+			userDb		= new UserSQLDatabase(properties);
+			regularDb	= new RegularSQLDatabase(properties);
+			rawDb		= new RawSQLDatabase(properties);
+		} else if (dbType.equals("JSON")) {
+            ...
+        }
+    ~~~
+    First, these conditions can be moved outside to avoid having a huge
+    constructor. An Abstract Factory pattern was used in this case (it
+    seems a bit overkill for this case, but it was a nice real case in which
+    an Abstract Factory pattern could be implemented).
+    ~~~
+    public interface AbstractDatabaseFactory {
+    	public RawDatabase getRawDatabase(Properties properties);
+    	public RegularDatabase getRegularDatabase(Properties properties);
+    	public UserDatabase getUserDatabase(Properties properties);
+    }
+    
+    public class DatabaseFactoryProducer {
+    	
+    	/**
+    	 * Get a factory based on the type of database we want to use.
+    	 * @param type of database
+    	 * @return database factory for the selected type of database
+    	 */
+    	public static AbstractDatabaseFactory getFactory(String type) {
+    		if (type.equals("SQL")) {
+    			return new SQLDatabaseFactory();
+    		}
+    		
+    		return null;
+    	}
+    }
+    
+    public class SQLDatabaseFactory implements AbstractDatabaseFactory {
+
+    	public RawDatabase getRawDatabase(Properties properties) {
+    		return new RawSQLDatabase(properties);
+    	}
+
+    	public RegularDatabase getRegularDatabase(Properties properties) {
+    		return new RegularSQLDatabase(properties);
+    	}
+
+    	public UserDatabase getUserDatabase(Properties properties) {
+    		return new UserSQLDatabase(properties);
+    	}
+
+    }
+    
+    public DatabaseFacade(Properties properties) {
+		String dbType = properties.getProperty("dbType");
+		AbstractDatabaseFactory df = DatabaseFactoryProducer.getFactory(dbType);
+		
+		userDb    = df.getUserDatabase(properties);
+		regularDb = df.getRegularDatabase(properties);
+		rawDb     = df.getRawDatabase(properties);
+	}
+    ~~~
+    Here we only have two databases implementations, but should the number grow
+    quickly, a more dynamic solution would be to use reflection. However using
+    reflection has an impact on performances and should be used as a last
+    resort.
+     
+     
 
 * Managers are only wrappers and give more or less direct access to the database
 layer, is it acceptable? See if can refactor so that more processing can be done
