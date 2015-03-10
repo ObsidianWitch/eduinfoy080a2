@@ -132,12 +132,15 @@ thing under the hood, there is a lot of code duplication. They could be grouped
 as a Subscription with a field specifying which type of subscription it is
 (expensive, cheap or free). It would then be easier to add new types of
 subscription.
+    * When we modify the *UserProfile* (e.g. add *asJson()* method) it has an impact
+    on all subclasses -> may be a pain (visitor pattern).
 
-* When we modify the *UserProfile* (e.g. add *asJson()* method) it has an impact
-on all subclasses -> may be a pain (visitor pattern).
-
-* UserProfile.getType() is used to have an uniform way to knwow where the data
-must be added -> refacto data
+    * UserProfile.getType() is used to have an uniform way to knwow where the data
+    must be added -> refacto data
+    
+    * after some research: ExpensiveSubscription, CheapSubscription, FreeSubscription,
+    ExpertAdministator, ExternalAdministrator, RegularAdministrator and Operator
+    are the same thing...
 
 # Miscellaneous
 
