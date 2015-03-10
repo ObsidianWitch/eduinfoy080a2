@@ -12,12 +12,13 @@ import javax.servlet.http.HttpServletRequest;
  * @author Niels Joncheere
  */
 public abstract class UserProfile extends Data {
-	protected	String	username;
-	protected	String	password;
-	protected	String	firstName;
-	protected	String	lastName;
-	protected	String	emailAddress;
-	protected	Date	lastLogin;
+	protected String username;
+	protected String password;
+	protected String firstName;
+	protected String lastName;
+	protected String emailAddress;
+	protected Date   lastLogin;
+	protected String type;
 	
 	/**
 	 * Creates a new account from a
