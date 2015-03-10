@@ -1,4 +1,4 @@
-package softarch.portal.db;
+package softarch.portal.db.sql;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,12 +10,14 @@ import java.util.List;
 import java.util.Iterator;
 import java.util.Properties;
 
+import softarch.portal.db.DatabaseException;
+
 /**
  * This abstract class implements the behaviour that is to be shared
- * by all databases.
+ * by all SQL databases.
  * @author Niels Joncheere
  */
-public class Database {
+public class SQLDatabase {
 	protected String dbUser;
 	protected String dbPassword;
 	protected String dbUrl;
@@ -23,7 +25,7 @@ public class Database {
 	/**
 	 * Creates a new database.
 	 */
-	public Database(Properties properties) {
+	public SQLDatabase(Properties properties) {
 		this.dbUser	= properties.getProperty("dbSQLUser");
 		this.dbPassword	= properties.getProperty("dbSQLPassword");
 		this.dbUrl	= properties.getProperty("dbSQLUrl");

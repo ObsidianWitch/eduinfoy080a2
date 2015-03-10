@@ -1,4 +1,4 @@
-package softarch.portal.db;
+package softarch.portal.db.sql;
 
 import java.util.List;
 import java.util.Properties;
@@ -16,6 +16,7 @@ import softarch.portal.data.RawData;
 import softarch.portal.data.RegularData;
 import softarch.portal.data.Report;
 import softarch.portal.data.SoftwareRepository;
+import softarch.portal.db.DatabaseException;
 
 import java.sql.SQLException;
 
@@ -23,11 +24,11 @@ import java.sql.SQLException;
  * This class encapsulates the portal's raw database.
  * @author Niels Joncheere
  */
-public class RawDatabase extends Database {
+public class RawSQLDatabase extends SQLDatabase {
 	/**
 	 * Creates a new raw database.
 	 */
-	public RawDatabase(Properties properties) {
+	public RawSQLDatabase(Properties properties) {
 		super(properties);
 	}
 

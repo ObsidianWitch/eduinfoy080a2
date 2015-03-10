@@ -3,6 +3,9 @@ package softarch.portal.db;
 import softarch.portal.data.RawData;
 import softarch.portal.data.RegularData;
 import softarch.portal.data.UserProfile;
+import softarch.portal.db.sql.RawSQLDatabase;
+import softarch.portal.db.sql.RegularSQLDatabase;
+import softarch.portal.db.sql.UserSQLDatabase;
 
 import java.util.List;
 import java.util.Date;
@@ -13,17 +16,17 @@ import java.util.Properties;
  * @author Niels Joncheere
  */
 public class DatabaseFacade {
-	private UserDatabase	userDb;
-	private RegularDatabase	regularDb;
-	private RawDatabase	rawDb;
+	private UserSQLDatabase	userDb;
+	private RegularSQLDatabase	regularDb;
+	private RawSQLDatabase	rawDb;
 
 	/**
 	 * Creates a new database facade.
 	 */
 	public DatabaseFacade(Properties properties) {
-		userDb		= new UserDatabase(properties);
-		regularDb	= new RegularDatabase(properties);
-		rawDb		= new RawDatabase(properties);
+		userDb		= new UserSQLDatabase(properties);
+		regularDb	= new RegularSQLDatabase(properties);
+		rawDb		= new RawSQLDatabase(properties);
 	}
 
 	/**
