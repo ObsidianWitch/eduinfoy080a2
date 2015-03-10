@@ -2,6 +2,7 @@ package softarch.portal.db.test;
 
 import softarch.portal.data.RawData;
 import softarch.portal.data.SoftwareRepository;
+import softarch.portal.db.RawDatabase;
 import softarch.portal.db.sql.RawSQLDatabase;
 
 import java.util.Date;
@@ -21,7 +22,7 @@ public class TestAddRawData {
 			properties.setProperty("dbPassword", "chivas12");
 			properties.setProperty("dbUrl", "localhost/njonchee");
 			
-			RawSQLDatabase rawDb = new RawSQLDatabase(properties);
+			RawDatabase rawDb = new RawSQLDatabase(properties);
 			RawData rd = new RawData(0, "boe");
 			rd.setStructure(new SoftwareRepository(
 				new Date(),

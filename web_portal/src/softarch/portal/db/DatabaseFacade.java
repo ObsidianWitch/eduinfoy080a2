@@ -18,7 +18,7 @@ import java.util.Properties;
 public class DatabaseFacade {
 	private UserSQLDatabase	userDb;
 	private RegularSQLDatabase	regularDb;
-	private RawSQLDatabase	rawDb;
+	private RawDatabase	rawDb;
 
 	/**
 	 * Creates a new database facade.

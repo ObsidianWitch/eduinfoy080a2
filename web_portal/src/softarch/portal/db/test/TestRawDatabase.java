@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Properties;
 
 import softarch.portal.data.RawData;
+import softarch.portal.db.RawDatabase;
 import softarch.portal.db.sql.RawSQLDatabase;
 
 /**
@@ -19,7 +20,7 @@ public class TestRawDatabase {
 			properties.setProperty("dbPassword", "chivas12");
 			properties.setProperty("dbUrl", "localhost/njonchee");
 			
-			RawSQLDatabase rd = new RawSQLDatabase(properties);
+			RawDatabase rd = new RawSQLDatabase(properties);
 			System.out.println("NUMBER OF RECORDS");
 			System.out.println(rd.getNumberOfRawRecords());
 			System.out.println();
