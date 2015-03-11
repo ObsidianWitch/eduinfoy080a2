@@ -45,9 +45,11 @@ it will be stored**
     object (e.g. *public CheapSubscription(ResultSet rs)*)
     * need a way to construct an object which can be inserted/updated into the
     database (e.g. *asSql()*)
+    * should be handled at the database layer level
     * -> Repository idea (e.g. Symfony2 & Doctrine)
     * Data.normalizeXML & Data.normalizeSql should already exist in libraries and
     should be handled at the db layer level, not in the data itself
+    * another solution: Gson's reflection (or Doctrine annotations/external yaml file)
 
 * Data, RegularData, UserProfile and RawData seem to have some inconsistencies
 in their interfaces
