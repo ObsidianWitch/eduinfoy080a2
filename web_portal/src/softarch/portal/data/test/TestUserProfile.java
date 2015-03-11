@@ -2,7 +2,7 @@ package softarch.portal.data.test;
 
 import java.util.Date;
 
-import softarch.portal.data.ExternalAdministrator;
+import softarch.portal.data.UserProfile;
 
 /**
  * This is a test program for the UserProfile class and its subclasses.
@@ -10,14 +10,15 @@ import softarch.portal.data.ExternalAdministrator;
  */
 public class TestUserProfile {
 	public static void main(String[] args) {
-		ExternalAdministrator ea
-			= new ExternalAdministrator(	
+		UserProfile ea = new UserProfile(	
 				"Niels82",
 				"7475",
 				"Niels",
 				"Joncheere",
 				"niels@joncheere.be",
-				new Date());
+				new Date(),
+				UserProfile.UserTypes.ExternalAdministrator.toString()
+		);
 		System.out.println(ea.asSql());
 		System.out.println();
 		System.out.println(ea.getDefaultPage());

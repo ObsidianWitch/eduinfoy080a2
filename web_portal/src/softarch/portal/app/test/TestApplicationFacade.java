@@ -1,7 +1,7 @@
 package softarch.portal.app.test;
 
 import softarch.portal.app.ApplicationFacade;
-import softarch.portal.data.FreeSubscription;
+import softarch.portal.data.UserProfile;
 
 import java.util.Date;
 import java.util.Properties;
@@ -13,13 +13,15 @@ import java.util.Properties;
 public class TestApplicationFacade {
 	public static void main(String[] args) {
 		try {
-			FreeSubscription fs = new FreeSubscription(
+			UserProfile fs = new UserProfile(
 				"Niels82",
 				"7475",
 				"Niels",
 				"Joncheere",
 				"niels@joncheere.be",
-				new Date());
+				new Date(),
+				UserProfile.UserTypes.FreeSubscription.toString()
+			);
 			
 			Properties properties = new Properties();
 			properties.setProperty("dbUser", "njonchee");
