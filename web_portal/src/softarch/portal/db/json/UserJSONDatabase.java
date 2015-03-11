@@ -40,7 +40,7 @@ public class UserJSONDatabase extends JSONDatabase implements UserDatabase {
 		boolean created = usersFile.createNewFile();
 		if (!created) { return false; }
 		
-		JsonObject jo = new JsonObject();
+		JsonObject jo = new JsonObject(); // TODO JsonArray
 		// TODO won't be necessary anymore when UserProfile subclasses will be
 		// removed
 		jo.add("FreeSubscription", new JsonArray());
@@ -72,9 +72,33 @@ public class UserJSONDatabase extends JSONDatabase implements UserDatabase {
 			throw new DatabaseException("IOException: " + e.getMessage());
 		}
 	}
-
+	
 	public void update(UserProfile profile) throws DatabaseException {
-		throw new DatabaseException("not implemented");
+		remove(profile);
+		insert(profile);
+	}
+	
+	private void remove(UserProfile profile) throws DatabaseException {
+		String type = profile.getType();
+		JsonObject jsonParsed = getUsersJson();
+		JsonArray usersFromType = jsonParsed.getAsJsonArray(type);
+		
+		for (JsonElement userProfileElement : usersFromType) {
+			JsonObject userProfileObject = (JsonObject) userProfileElement;
+			
+			if (userProfileObject.get("username").getAsString()
+					.equals(profile.getUsername())) 
+			{
+				usersFromType.remove(userProfileElement);
+				break;
+			}
+		}
+		
+		try {
+			writeToFile(jsonParsed.toString());
+		} catch (IOException e) {
+			throw new DatabaseException("IOException: " + e.getMessage());
+		}
 	}
 
 	public UserProfile findUser(String username) throws DatabaseException {
@@ -89,8 +113,9 @@ public class UserJSONDatabase extends JSONDatabase implements UserDatabase {
 				for (JsonElement userProfileElement : types) {
 					JsonObject userProfileObject = (JsonObject) userProfileElement;
 					
-					if (userProfileObject.get("username").getAsString().equals(username)) {
-						
+					if (userProfileObject.get("username").getAsString()
+							.equals(username))
+					{					
 						return (UserProfile) gson.fromJson(
 							userProfileObject,
 							Class.forName("softarch.portal.data." + entry.getKey())
