@@ -69,9 +69,9 @@
         <tr>
           <th width="50%">Subscription</th>
           <td width="50%">
-            <input type="radio" name="Subscription" value="Free" checked="checked" />Free Subscription<br />
-            <input type="radio" name="Subscription" value="Cheap" />Cheap Subscription<br />
-            <input type="radio" name="Subscription" value="Expensive" />Expensive Subscription<br />
+            <input type="radio" name="Type" value="FreeSubscription" checked="checked" />Free Subscription<br />
+            <input type="radio" name="Type" value="CheapSubscription" />Cheap Subscription<br />
+            <input type="radio" name="Type" value="ExpensiveSubscription" />Expensive Subscription<br />
           </td>
         </tr>
         <tr>

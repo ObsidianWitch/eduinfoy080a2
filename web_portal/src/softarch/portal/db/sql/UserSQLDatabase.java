@@ -51,16 +51,13 @@ public class UserSQLDatabase extends SQLDatabase implements UserDatabase {
 					ResultSet.CONCUR_UPDATABLE
 			);
 			
+			ResultSet rs = statement.executeQuery(
+				"SELECT * FROM UserProfile WHERE " +
+				"Username = \'" + username + "\';"
+			);
 			
-			for (UserProfile.UserTypes type : UserProfile.UserTypes.values()) {
-				ResultSet rs = statement.executeQuery(
-					"SELECT * FROM " + type.toString() + " WHERE " +
-					"Username = \'" + username + "\';"
-				);
-				
-				if (rs.first()) {
-					return new UserProfile(rs);
-				}
+			if (rs.first()) {
+				return new UserProfile(rs);
 			}
 			
 			throw new DatabaseException("Invalid username!");

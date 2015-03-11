@@ -64,7 +64,7 @@ public class UserProfile extends Data {
 			this.lastName     = rs.getString("LastName");
 			this.emailAddress = rs.getString("EmailAddress");
 			this.lastLogin    = df.parse(rs.getString("LastLogin"));
-			this.type         = rs.getString("type");
+			this.type         = rs.getString("Type");
 		}
 	
 	/**
@@ -114,14 +114,15 @@ public class UserProfile extends Data {
 	 * the account to a relational database.
 	 */
 	public String asSql() {
-		return	"INSERT INTO " + type + " (Username, " +
-			"Password, FirstName, LastName, EmailAddress, " +
-			"LastLogin) VALUES (\'" + normalizeSql(username) +
-			"\', \'" + normalizeSql(password) +"\', \'" +
-			normalizeSql(firstName) + "\', \'" +
-			normalizeSql(lastName) + "\', \'" +
-			normalizeSql(emailAddress) + "\', \'" + 
-			df.format(lastLogin) + "\');";
+		return	"INSERT INTO userProfile (Username, " +
+				"Password, FirstName, LastName, EmailAddress, " +
+				"LastLogin, Type) VALUES (\'" + normalizeSql(username) +
+				"\', \'" + normalizeSql(password) +"\', \'" +
+				normalizeSql(firstName) + "\', \'" +
+				normalizeSql(lastName) + "\', \'" +
+				normalizeSql(emailAddress) + "\', \'" + 
+				df.format(lastLogin) + "\', \'" +
+				normalizeSql(type) + "\');";
 	}
 
 	/**
@@ -129,13 +130,14 @@ public class UserProfile extends Data {
 	 * the account in a relational database.
 	 */
 	public String asSqlUpdate() {
-		return  "UPDATE " + type + " SET Password = \'" +
-			normalizeSql(password) + "\', FirstName = \'" +
-			normalizeSql(firstName) + "\', LastName = \'" +
-			normalizeSql(lastName) + "\', EmailAddress = \'" +
-			normalizeSql(emailAddress) + "\', LastLogin = \'" +
-			df.format(lastLogin) + "\' " + "WHERE Username = \'" +
-			normalizeSql(username) + "\';";
+		return  "UPDATE UserProfile SET Password = \'" +
+				normalizeSql(password) + "\', FirstName = \'" +
+				normalizeSql(firstName) + "\', LastName = \'" +
+				normalizeSql(lastName) + "\', EmailAddress = \'" +
+				normalizeSql(emailAddress) + "\', LastLogin = \'" +
+				df.format(lastLogin) + "\', Type = \'" + 
+				normalizeSql(type) + "\' " + "WHERE Username = \'" +
+				normalizeSql(username) + "\';";
 	}
 
 	public String getUsername() {

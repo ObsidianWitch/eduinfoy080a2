@@ -3,10 +3,6 @@ package softarch.portal.db;
 import softarch.portal.data.RawData;
 import softarch.portal.data.RegularData;
 import softarch.portal.data.UserProfile;
-import softarch.portal.db.sql.RawSQLDatabase;
-import softarch.portal.db.sql.RegularSQLDatabase;
-import softarch.portal.db.sql.UserSQLDatabase;
-
 import java.util.List;
 import java.util.Date;
 import java.util.Properties;
