@@ -40,15 +40,10 @@ public class UserJSONDatabase extends JSONDatabase implements UserDatabase {
 		boolean created = usersFile.createNewFile();
 		if (!created) { return false; }
 		
-		JsonObject jo = new JsonObject(); // TODO JsonArray
-		// TODO won't be necessary anymore when UserProfile subclasses will be
-		// removed
-		jo.add("FreeSubscription", new JsonArray());
-		jo.add("CheapSubscription", new JsonArray());
-		jo.add("ExpensiveSubscription", new JsonArray());
+		JsonArray ja = new JsonArray();
 		
 		Gson gson = new Gson();
-		String jsonDocument = gson.toJson(jo);
+		String jsonDocument = gson.toJson(ja);
 		writeToFile(jsonDocument);
 		
 		return true; 
@@ -57,17 +52,13 @@ public class UserJSONDatabase extends JSONDatabase implements UserDatabase {
 	public void insert(UserProfile profile) throws DatabaseException {
 		Gson gson = new Gson();
 		
-		JsonObject jsonParsed = getUsersJson();
+		JsonArray usersArray = getUsersJson();
 		
-		// TODO remove UserProfile subclasses and add type field to UserProfile
-		String type = profile.getType();
 		JsonElement jsonProfile = gson.toJsonTree(profile);
-		
-		JsonArray usersFromType = jsonParsed.getAsJsonArray(type);
-		usersFromType.add(jsonProfile);
+		usersArray.add(jsonProfile);
 
 		try {
-			writeToFile(jsonParsed.toString());
+			writeToFile(usersArray.toString());
 		} catch (IOException e) {
 			throw new DatabaseException("IOException: " + e.getMessage());
 		}
@@ -79,53 +70,44 @@ public class UserJSONDatabase extends JSONDatabase implements UserDatabase {
 	}
 	
 	private void remove(UserProfile profile) throws DatabaseException {
-		String type = profile.getType();
-		JsonObject jsonParsed = getUsersJson();
-		JsonArray usersFromType = jsonParsed.getAsJsonArray(type);
+		JsonArray usersArray = getUsersJson();
 		
-		for (JsonElement userProfileElement : usersFromType) {
+		for (JsonElement userProfileElement : usersArray) {
 			JsonObject userProfileObject = (JsonObject) userProfileElement;
 			
 			if (userProfileObject.get("username").getAsString()
 					.equals(profile.getUsername())) 
 			{
-				usersFromType.remove(userProfileElement);
+				usersArray.remove(userProfileElement);
 				break;
 			}
 		}
 		
 		try {
-			writeToFile(jsonParsed.toString());
+			writeToFile(usersArray.toString());
 		} catch (IOException e) {
 			throw new DatabaseException("IOException: " + e.getMessage());
 		}
 	}
 
 	public UserProfile findUser(String username) throws DatabaseException {
-		// TODO refacto type field
 		Gson gson = new Gson();
 		
 		try {
-			JsonObject jsonParsed = getUsersJson();
-			for (Map.Entry<String,JsonElement> entry : jsonParsed.entrySet()) {
-				JsonArray types = (JsonArray) entry.getValue();
+			JsonArray usersArray = getUsersJson();
+			
+			for (JsonElement userProfileElement : usersArray) {
+				JsonObject userProfileObject = (JsonObject) userProfileElement;
 				
-				for (JsonElement userProfileElement : types) {
-					JsonObject userProfileObject = (JsonObject) userProfileElement;
-					
-					if (userProfileObject.get("username").getAsString()
-							.equals(username))
-					{					
-						return (UserProfile) gson.fromJson(
-							userProfileObject,
-							Class.forName("softarch.portal.data." + entry.getKey())
-						);
-					}
+				if (userProfileObject.get("username").getAsString()
+						.equals(username)) 
+				{
+					return (UserProfile) gson.fromJson(
+						userProfileObject, UserProfile.class
+					);
 				}
 			}
 		} catch (JsonSyntaxException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 		
@@ -136,13 +118,13 @@ public class UserJSONDatabase extends JSONDatabase implements UserDatabase {
 		return findUser(username) != null;
 	}
 	
-	private JsonObject getUsersJson() throws DatabaseException {
-		JsonObject jsonParsed = null;
+	private JsonArray getUsersJson() throws DatabaseException {
+		JsonArray jsonParsed = null;
 		
 		try {
 			JsonParser parser = new JsonParser();
 			JsonElement jsonElement = parser.parse(new FileReader(usersFile));
-			jsonParsed = jsonElement.getAsJsonObject();
+			jsonParsed = jsonElement.getAsJsonArray();
 		}
 		catch (FileNotFoundException e) {
 			throw new DatabaseException(
