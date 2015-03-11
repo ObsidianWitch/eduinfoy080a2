@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.Map;
 import java.util.Properties;
 
 import com.google.gson.Gson;
@@ -13,6 +14,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 
 import softarch.portal.data.UserProfile;
 import softarch.portal.db.DatabaseException;
@@ -72,18 +74,41 @@ public class UserJSONDatabase extends JSONDatabase implements UserDatabase {
 	}
 
 	public void update(UserProfile profile) throws DatabaseException {
-		// TODO Auto-generated method stub
-		
+		throw new DatabaseException("not implemented");
 	}
 
 	public UserProfile findUser(String username) throws DatabaseException {
-		// TODO Auto-generated method stub
+		// TODO refacto type field
+		Gson gson = new Gson();
+		
+		try {
+			JsonObject jsonParsed = getUsersJson();
+			for (Map.Entry<String,JsonElement> entry : jsonParsed.entrySet()) {
+				JsonArray types = (JsonArray) entry.getValue();
+				
+				for (JsonElement userProfileElement : types) {
+					JsonObject userProfileObject = (JsonObject) userProfileElement;
+					
+					if (userProfileObject.get("username").getAsString().equals(username)) {
+						
+						return (UserProfile) gson.fromJson(
+							userProfileObject,
+							Class.forName("softarch.portal.data." + entry.getKey())
+						);
+					}
+				}
+			}
+		} catch (JsonSyntaxException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
 		return null;
 	}
 
 	public boolean userExists(String username) throws DatabaseException {
-		// TODO Auto-generated method stub
-		return false;
+		return findUser(username) != null;
 	}
 	
 	private JsonObject getUsersJson() throws DatabaseException {
