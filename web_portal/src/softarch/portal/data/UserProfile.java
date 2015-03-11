@@ -8,16 +8,33 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * This is an abstract superclass for all user profiles.
+ * Represents all user profiles.
  * @author Niels Joncheere
  */
-public abstract class UserProfile extends Data {
+public class UserProfile extends Data {
+	public enum UserTypes {
+		ExpertAdministrator("web_portal?Page=Administration"),
+		ExternalAdministrator("web_portal?Page=Administration"),
+		RegularAdministrator("web_portal?Page=Administration"),
+		CheapSubscription("web_portal?Page=Query"),
+		ExpensiveSubscription("web_portal?Page=Query"),
+		FreeSubscription("web_portal?Page=Query"),
+		Operator("web_portal?Page=Operation");
+		
+		private String defaultPage;
+ 
+		private UserTypes(String defaultPage) {
+			this.defaultPage = defaultPage;
+		}
+	}
+	
 	protected String username;
 	protected String password;
 	protected String firstName;
 	protected String lastName;
 	protected String emailAddress;
 	protected Date   lastLogin;
+	protected String type;
 	
 	/**
 	 * Creates a new account from a
@@ -31,7 +48,8 @@ public abstract class UserProfile extends Data {
 			request.getParameter("FirstName"),
 			request.getParameter("LastName"),
 			request.getParameter("EmailAddress"),
-			new Date()
+			new Date(),
+			request.getParameter("Type")
 		);
 	}
 	
@@ -46,13 +64,14 @@ public abstract class UserProfile extends Data {
 			this.lastName     = rs.getString("LastName");
 			this.emailAddress = rs.getString("EmailAddress");
 			this.lastLogin    = df.parse(rs.getString("LastLogin"));
+			this.type         = rs.getString("type");
 		}
 	
 	/**
 	 * Creates a new account.
 	 */
 	public UserProfile(String username, String password, String firstName, 
-			String lastName, String emailAddress, Date lastLogin) 
+			String lastName, String emailAddress, Date lastLogin, String type) 
 	{
 		this.username     = username;
 		this.password     = password;
@@ -60,25 +79,22 @@ public abstract class UserProfile extends Data {
 		this.lastName     = lastName;
 		this.emailAddress = emailAddress;
 		this.lastLogin    = lastLogin;
+		this.type         = type;
 	}
 
 	/**
 	 * When a user has logged in successfully, he will be
 	 * redirected to this page.
 	 */
-	public abstract String getDefaultPage();
-	
-	/**
-	 * Type of user profile (e.g. Operator, ExpertAministrator, 
-	 * CheapSubscription)
-	 */
-	public abstract String getType();
+	public String getDefaultPage() {
+		return UserTypes.valueOf(type).defaultPage;
+	}
 	
 	/**
 	 * Returns an XML representation of the object.
 	 */
 	public String asXml() {
-		return	"<" + getType() + ">" +
+		return	"<" + type + ">" +
 			"<username>" + normalizeXml(username) + "</username>" +
 			// password is not returned,
 			// as it should only be used internally
@@ -90,7 +106,7 @@ public abstract class UserProfile extends Data {
 			normalizeXml(emailAddress) +
 			"</emailAddress>" +
 			"<lastLogin>" + df.format(lastLogin) + "</lastLogin>" +
-			"</" + getType() + ">";
+			"</" + type + ">";
 	}
 
 	/**
@@ -98,7 +114,7 @@ public abstract class UserProfile extends Data {
 	 * the account to a relational database.
 	 */
 	public String asSql() {
-		return	"INSERT INTO " + getType() + " (Username, " +
+		return	"INSERT INTO " + type + " (Username, " +
 			"Password, FirstName, LastName, EmailAddress, " +
 			"LastLogin) VALUES (\'" + normalizeSql(username) +
 			"\', \'" + normalizeSql(password) +"\', \'" +
@@ -113,7 +129,7 @@ public abstract class UserProfile extends Data {
 	 * the account in a relational database.
 	 */
 	public String asSqlUpdate() {
-		return  "UPDATE " + getType() + " SET Password = \'" +
+		return  "UPDATE " + type + " SET Password = \'" +
 			normalizeSql(password) + "\', FirstName = \'" +
 			normalizeSql(firstName) + "\', LastName = \'" +
 			normalizeSql(lastName) + "\', EmailAddress = \'" +
