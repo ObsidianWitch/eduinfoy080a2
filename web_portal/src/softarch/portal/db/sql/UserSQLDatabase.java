@@ -43,8 +43,7 @@ public class UserSQLDatabase extends SQLDatabase implements UserDatabase {
 	/**
 	 * Returns the user with the specified username.
 	 */
-	public UserProfile findUser(String username)
-		throws DatabaseException {
+	public UserProfile findUser(String username) throws DatabaseException {
 
 		try {
 			Statement statement = getConnection().createStatement(
@@ -77,64 +76,7 @@ public class UserSQLDatabase extends SQLDatabase implements UserDatabase {
 	/**
 	 * Checks whether a user with the specified username exists.
 	 */
-	public boolean userExists(String username)
-		throws DatabaseException {
-
-		// Connect to the database:
-		try {
-
-			Statement statement = getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-			ResultSet rs;
-			
-			rs = statement.executeQuery(
-				"SELECT * FROM FreeSubscription WHERE " +
-				"Username = \'" + username + "\';");
-			if (rs.first())
-				return true;
-
-			rs = statement.executeQuery(
-				"SELECT * FROM CheapSubscription WHERE " +
-				"Username = \'" + username + "\';");
-			if (rs.first())
-				return true;
-
-			rs = statement.executeQuery(
-				"SELECT * FROM ExpensiveSubscription WHERE " +
-				"Username = \'" + username + "\';");
-			if (rs.first())
-				return true;
-
-			rs = statement.executeQuery(
-				"SELECT * FROM Operator WHERE " +
-				"Username = \'" + username + "\';");
-			if (rs.first())
-				return true;
-
-			rs = statement.executeQuery(
-				"SELECT * FROM ExternalAdministrator WHERE " +
-				"Username = \'" + username + "\';");
-			if (rs.first())
-				return true;
-
-			rs = statement.executeQuery(
-				"SELECT * FROM RegularAdministrator WHERE " +
-				"Username = \'" + username + "\';");
-			if (rs.first())
-				return true;
-
-			rs = statement.executeQuery(
-				"SELECT * FROM ExpertAdministrator WHERE " +
-				"Username = \'" + username + "\';");
-			if (rs.first())
-				return true;
-
-			return false;
-		}
-
-		// Exception handling:
-		catch (SQLException e) {
-			throw new DatabaseException(
-				"SQL Exception: " + e.getMessage());
-		}
+	public boolean userExists(String username) throws DatabaseException {
+		return findUser(username) != null;
 	}
 }
