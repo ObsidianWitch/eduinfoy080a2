@@ -498,6 +498,29 @@ public class UserJSONDatabase extends JSONDatabase implements UserDatabase {
 ## Second implementation
 <!-- TODO -->
 
+<!-- TODO speak of ui.RegistrationPage -> we do not have to do a check on the
+subscription type anymore
+			switch (request
+				.getParameter("Subscription")
+				.charAt(0)) {
+
+				case 'F':
+					up = new FreeSubscription(request);
+					break;
+				case 'C':
+					up = new CheapSubscription(request);
+					break;
+				case 'E':
+					up = new ExpensiveSubscription(request);
+					break;
+				default:
+					throw new ApplicationException(
+						"You did not provide a valid " +
+						"subscription type.  Please " +
+						"try again.");
+			}
+-->
+
 # Miscellaneous
 
 The following files were added to git but further changes are not commited :
@@ -505,7 +528,7 @@ The following files were added to git but further changes are not commited :
 * DB/web_portal.lck
 * DB/web_portal.log
 * DB/web_portal.properties
-* DB/web_portal.script
+* DB/JSON/users.json
 
 This is done with the following command :
 ~~~

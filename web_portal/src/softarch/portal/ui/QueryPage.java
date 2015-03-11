@@ -3,11 +3,12 @@ package softarch.portal.ui;
 import softarch.portal.app.ApplicationException;
 import softarch.portal.app.ApplicationFacade;
 import softarch.portal.data.RegularData;
-import softarch.portal.data.RegularUser;
+import softarch.portal.data.UserProfile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Cookie;
+
 import java.util.List;
 import java.util.Date;
 import java.util.Iterator;
@@ -75,11 +76,8 @@ public class QueryPage extends Page {
 							cookies[i].getValue());
 				}
 
-				RegularUser profile
-					= (RegularUser) appFacade
-						.findUser(username, sessionId);
-				Date lastLogin
-					= profile.getLastLogin();
+				UserProfile profile = appFacade.findUser(username, sessionId);
+				Date lastLogin = profile.getLastLogin();
 
 				String output = new String();
 				output += "<QueryPage_Get>";

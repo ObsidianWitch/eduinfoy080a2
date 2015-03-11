@@ -2,14 +2,10 @@ package softarch.portal.ui;
 
 import softarch.portal.app.ApplicationException;
 import softarch.portal.app.ApplicationFacade;
-import softarch.portal.data.CheapSubscription;
-import softarch.portal.data.ExpensiveSubscription;
-import softarch.portal.data.FreeSubscription;
 import softarch.portal.data.UserProfile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
 
 /**
  * This class implements the portal's registration page.
@@ -77,26 +73,7 @@ public class RegistrationPage extends Page {
 					"You did not provide a username.  " +
 					"Please try again.");
 
-			UserProfile up;
-			switch (request
-				.getParameter("Subscription")
-				.charAt(0)) {
-
-				case 'F':
-					up = new FreeSubscription(request);
-					break;
-				case 'C':
-					up = new CheapSubscription(request);
-					break;
-				case 'E':
-					up = new ExpensiveSubscription(request);
-					break;
-				default:
-					throw new ApplicationException(
-						"You did not provide a valid " +
-						"subscription type.  Please " +
-						"try again.");
-			}
+			UserProfile up = new UserProfile(request);
 
 			appFacade.add(up);
 
