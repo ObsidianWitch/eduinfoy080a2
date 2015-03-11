@@ -267,6 +267,29 @@ field containing the type of user. Then, we could remove the
 *Operator* classes. It would then be easier to add new types of users.
 <!-- TODO see if I have enough motivation to do it -->
 
+<!-- TODO speak of ui.RegistrationPage -> we do not have to do a check on the
+subscription type anymore
+			switch (request
+				.getParameter("Subscription")
+				.charAt(0)) {
+
+				case 'F':
+					up = new FreeSubscription(request);
+					break;
+				case 'C':
+					up = new CheapSubscription(request);
+					break;
+				case 'E':
+					up = new ExpensiveSubscription(request);
+					break;
+				default:
+					throw new ApplicationException(
+						"You did not provide a valid " +
+						"subscription type.  Please " +
+						"try again.");
+			}
+-->
+
 # Miscellaneous
 
 The following files were added to git but further changes are not commited :

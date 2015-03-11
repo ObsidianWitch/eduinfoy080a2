@@ -2,15 +2,9 @@ package softarch.portal.ui;
 
 import softarch.portal.app.ApplicationException;
 import softarch.portal.app.ApplicationFacade;
-import softarch.portal.data.RegularData;
-import softarch.portal.data.RegularUser;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Cookie;
-import java.util.List;
-import java.util.Date;
-import java.util.Iterator;
 
 /**
  * This class implements the portal's logout page.
