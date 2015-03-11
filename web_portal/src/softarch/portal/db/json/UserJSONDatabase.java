@@ -1,20 +1,74 @@
 package softarch.portal.db.json;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.Properties;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import softarch.portal.data.UserProfile;
 import softarch.portal.db.DatabaseException;
 import softarch.portal.db.UserDatabase;
 
 public class UserJSONDatabase extends JSONDatabase implements UserDatabase {
+	
+	public File usersFile;
 
 	public UserJSONDatabase(Properties properties) {
 		super(properties);
+		
+		try {
+			String dbUrl = properties.getProperty("dbJSONUrl");
+			usersFile = new File(dbUrl + "/users.json");
+			createJsonDocument();
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private boolean createJsonDocument() throws IOException {
+		boolean created = usersFile.createNewFile();
+		if (!created) { return false; }
+		
+		JsonObject jo = new JsonObject();
+		// TODO won't be necessary anymore when UserProfile subclasses will be
+		// removed
+		jo.add("FreeSubscription", new JsonArray());
+		jo.add("CheapSubscription", new JsonArray());
+		jo.add("ExpensiveSubscription", new JsonArray());
+		
+		Gson gson = new Gson();
+		String jsonDocument = gson.toJson(jo);
+		writeToFile(jsonDocument);
+		
+		return true; 
 	}
 
 	public void insert(UserProfile profile) throws DatabaseException {
-		// TODO Auto-generated method stub
+		Gson gson = new Gson();
 		
+		JsonObject jsonParsed = getUsersJson();
+		
+		// TODO remove UserProfile subclasses and add type field to UserProfile
+		String type = profile.getType();
+		JsonElement jsonProfile = gson.toJsonTree(profile);
+		
+		JsonArray usersFromType = jsonParsed.getAsJsonArray(type);
+		usersFromType.add(jsonProfile);
+
+		try {
+			writeToFile(jsonParsed.toString());
+		} catch (IOException e) {
+			throw new DatabaseException("IOException: " + e.getMessage());
+		}
 	}
 
 	public void update(UserProfile profile) throws DatabaseException {
@@ -30,6 +84,32 @@ public class UserJSONDatabase extends JSONDatabase implements UserDatabase {
 	public boolean userExists(String username) throws DatabaseException {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	private JsonObject getUsersJson() throws DatabaseException {
+		JsonObject jsonParsed = null;
+		
+		try {
+			JsonParser parser = new JsonParser();
+			JsonElement jsonElement = parser.parse(new FileReader(usersFile));
+			jsonParsed = jsonElement.getAsJsonObject();
+		}
+		catch (FileNotFoundException e) {
+			throw new DatabaseException(
+				"File not found Exception: " + e.getMessage()
+			);
+		}  
+		
+		return jsonParsed;
+	}
+	
+	private void writeToFile(String json) throws IOException {
+        OutputStreamWriter out = new OutputStreamWriter(
+        		new FileOutputStream(usersFile)
+        );
+        
+        out.write(json);
+        out.close();
 	}
 
 }

@@ -27,7 +27,7 @@ public class FreeSubscription extends RegularUser {
 	}
 	
 	@Override
-	protected String getType() {
+	public String getType() {
 		return "FreeSubscription";
 	}
 }

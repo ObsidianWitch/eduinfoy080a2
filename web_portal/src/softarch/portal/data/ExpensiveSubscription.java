@@ -27,7 +27,7 @@ public class ExpensiveSubscription extends RegularUser {
 	}
 	
 	@Override
-	protected String getType() {
+	public String getType() {
 		return "ExpensiveSubscription";
 	}
 }

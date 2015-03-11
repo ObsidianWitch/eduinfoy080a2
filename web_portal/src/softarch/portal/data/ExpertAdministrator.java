@@ -27,7 +27,7 @@ public class ExpertAdministrator extends Administrator {
 	}
 	
 	@Override
-	protected String getType() {
+	public String getType() {
 		return "ExpertAdministrator";
 	}
 }

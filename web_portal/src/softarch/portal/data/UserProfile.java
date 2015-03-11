@@ -18,7 +18,6 @@ public abstract class UserProfile extends Data {
 	protected String lastName;
 	protected String emailAddress;
 	protected Date   lastLogin;
-	protected String type;
 	
 	/**
 	 * Creates a new account from a
@@ -73,7 +72,7 @@ public abstract class UserProfile extends Data {
 	 * Type of user profile (e.g. Operator, ExpertAministrator, 
 	 * CheapSubscription)
 	 */
-	protected abstract String getType();
+	public abstract String getType();
 	
 	/**
 	 * Returns an XML representation of the object.

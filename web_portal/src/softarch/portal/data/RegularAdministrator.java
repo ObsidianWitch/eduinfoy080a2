@@ -30,7 +30,7 @@ public class RegularAdministrator extends Administrator {
 	}
 	
 	@Override
-	protected String getType() {
+	public String getType() {
 		return "RegularAdministrator";
 	}
 }

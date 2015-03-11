@@ -35,7 +35,7 @@ public class Operator extends UserProfile {
 	}
 
 	@Override
-	protected String getType() {
+	public String getType() {
 		return "Operator";
 	}
 }
