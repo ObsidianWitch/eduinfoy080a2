@@ -78,6 +78,7 @@ public class UserJSONDatabase extends JSONDatabase implements UserDatabase {
 		insert(profile);
 	}
 	
+	// TODO code duplication
 	private void remove(UserProfile profile) throws DatabaseException {
 		String type = profile.getType();
 		JsonObject jsonParsed = getUsersJson();

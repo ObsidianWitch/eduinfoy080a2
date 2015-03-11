@@ -57,8 +57,6 @@ in their interfaces
     * asSqlDelete()
     * asSqlUpdate()
     
-* talk about the JSONDatabase implementation
-    
 # Solved problems
 
 ## useless dependency injection
@@ -266,6 +264,94 @@ field containing the type of user. Then, we could remove the
 *ExpertAdministator*, *ExternalAdministrator*, *RegularAdministrator* and
 *Operator* classes. It would then be easier to add new types of users.
 <!-- TODO see if I have enough motivation to do it -->
+
+## JSONDatabase implementation
+First of all, the *softarch.portal.db.json* package as well as the
+*JSONDatabase*, *JSONDatabaseFactory*, *RawJSONDatabase*, *RegularJSONDatabase*,
+*UserJSONDatabase* classes were created. There is not much to say about the
+first 2 classes since they are similar to the SQL ones. As for *RawJSONDatabase*
+and *RegularJSONDatabase*, all their methods throw the following exception since
+the assignement subject specified that we did not have to implement them:
+~~~
+	throw new DatabaseException("not implemented");
+~~~
+
+Only the methods from the *UserJSONDatabase* class were developed. By doing so,
+we want to be able to create subscriptions (*FreeSubscription*,
+*CheapSubscription*, *ExpensiveSubscription*), login and logout.
+
+The *gson* library is used to parse and write JSON files. The lirary's jar
+(*gson-2.3.1.jar*) was added to the *WebContent/WEB-INF/lib* directory.
+<!-- TODO add reference https://code.google.com/p/google-gson/ -->
+
+### First implementation
+The first implementation was done before the type refactoring.
+
+The constructor instantiate the *usersFile* field which is an instance of
+the *File* class. This instance points to the *users.json* file where the data
+will be retrieved and stored. If the file is not created, then a new empty JSON
+document is created.
+
+~~~
+private boolean createJsonDocument() throws IOException {
+	boolean created = usersFile.createNewFile();
+	if (!created) { return false; }
+	
+	JsonObject jo = new JsonObject();
+	jo.add("FreeSubscription", new JsonArray());
+	jo.add("CheapSubscription", new JsonArray());
+	jo.add("ExpensiveSubscription", new JsonArray());
+	
+	Gson gson = new Gson();
+	String jsonDocument = gson.toJson(jo);
+	writeToFile(jsonDocument);
+	
+	return true;
+}
+~~~
+
+<!-- TODO caption: empty JSON document -->
+~~~
+{"FreeSubscription":[],"CheapSubscription":[],"ExpensiveSubscription":[]}
+~~~
+
+The *insert(UserProfile profile)* method first retrieve the content of the JSON
+file and stores it in a *JsonObject*. Then, we retrieve the type of the
+*UserProfile* in order to know in which array we will insert the new profile.
+Next, the *UserProfile* is transformed in a *JsonElement* instance with the
+*gson.toJsonTree(profile)* method and added to the appropriate array.
+Finally, the modified JsonObject is written to the file.
+
+<!-- TODO caption: add a FreeSubscription-->
+~~~
+{
+    "FreeSubscription":[
+        {
+            "username":"test",
+            "password":"test",
+            "firstName":"test",
+            "lastName":"test",
+            "emailAddress":"test",
+            "lastLogin":"Mar 11, 2015 8:58:05 AM"
+        }
+    ],
+    "CheapSubscription":[],
+    "ExpensiveSubscription":[]
+}
+~~~
+
+**N.B.** We do not need an *asJson()* method in UserProfile, Gson uses
+reflection in order to be able to parse any class' instance.
+
+The *update(UserProfile profile)* method was implemented by first calling the
+*remove(UserProfile profile)* method, which removes a profile based on the
+username, and then calling the *insert(UserProfile profile)* method.
+
+*userExists(String username)* just check whether *findUser(username)* returns
+null.
+
+## Second implementation
+<!-- TODO -->
 
 # Miscellaneous
 
