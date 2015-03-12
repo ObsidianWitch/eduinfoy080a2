@@ -71,8 +71,8 @@ the long *if..else* of the *DatabaseFacade* constructor which can be seen below.
 
 These conditions can be moved outside to avoid having a huge
 constructor. An Abstract Factory pattern was used, which may be a bit overkill
-in this case (but it was a real application of the Abstract Factory pattern and
-I wanted to try it).
+in this case (but it was a real application of this pattern and I wanted to try
+it).
 
 ~~~
 public interface AbstractDatabaseFactory {
@@ -690,6 +690,9 @@ in their interfaces
     * asSqlDelete()
     * asSqlUpdate()
 
+# Façade pattern
+<!-- TODO How does the fa ̧cade pattern facilitate switching between different
+implementations of a layer? -->
 
 # Miscellaneous
 
