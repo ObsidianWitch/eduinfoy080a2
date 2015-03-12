@@ -657,8 +657,10 @@ it must go through the Logic Layer via some kind of interface."
 ([source](http://allthingscs.blogspot.be/2011/03/mvc-vs-3-tier-pattern.html))
 -> is this application really a 3-tiered system?
 
-* The UI layer would gain in clarity by using a template engine (e.g. something
-similar to twig for php, mustache.java, apache velocity) <!-- TODO references -->
+* The UI layer would gain in clarity by using an *XMLBuilder* which could
+help creating the XML pages by chaining methods. The code would be more readable
+than the hard-coded *Strings* that are currently used, and it would be easier
+to reuse part of pages.
     
 * data coupled with the database layer -> **data should be decoupled from where
 it will be stored**
