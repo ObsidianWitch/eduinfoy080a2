@@ -218,47 +218,138 @@ public class UserProfile extends Data {
 }
 ~~~
 
-<!-- TODO rephrase
-Further code refactoring could be done, for example we could add a *String*
-field containing the type of user. Then, we could remove the
-*ExpensiveSubscription*, *CheapSubscription*, *FreeSubscription*,
+### Type refactoring
+
+Further code refactoring was be done, a *String* field containing the
+type of user was added to the *UserProfile* class. *UserProfile* was also made
+instantiable (previously was Abstract). Then, the following classes were
+removed: *ExpensiveSubscription*, *CheapSubscription*, *FreeSubscription*,
 *ExpertAdministator*, *ExternalAdministrator*, *RegularAdministrator* and
-*Operator* classes. It would then be easier to add new types of users.
--->
+*Operator* classes. By doing so, it is easier to add new types of users.
 
-<!-- TODO
- * removed UserProfile subclasses
- * UserProfile
-    * Abstract -> Concrete
-    * enum UserTypes
-    * getDefaultPage()
-    * type Field
- * ui modifs (e.g. ui.RegistrationPage, see below)
- * fix xsl for requests
--->
+But these modifications are not sufficient, first of all the *UserProfile*
+subclasses implemented the *getDefaultPage()* method. To still be able to
+retrieve the deault page, an enum was created. The *UserTypes* enum contains
+the different existing types (e.g. ExpertAdministrator), with each type
+containing its default page.
 
-<!-- TODO speak of ui.RegistrationPage -> we do not have to do a check on the
-subscription type anymore
-			switch (request
-				.getParameter("Subscription")
-				.charAt(0)) {
+<!-- TODO caption: enum & default page -->
+~~~
+public class UserProfile extends Data {
+	public enum UserTypes {
+		ExpertAdministrator("web_portal?Page=Administration"),
+		ExternalAdministrator("web_portal?Page=Administration"),
+		RegularAdministrator("web_portal?Page=Administration"),
+		CheapSubscription("web_portal?Page=Query"),
+		ExpensiveSubscription("web_portal?Page=Query"),
+		FreeSubscription("web_portal?Page=Query"),
+		Operator("web_portal?Page=Operation");
+		
+		private String defaultPage;
+ 
+		private UserTypes(String defaultPage) {
+			this.defaultPage = defaultPage;
+		}
+	}
+    
+    ...
+    
+	public String getDefaultPage() {
+		return UserTypes.valueOf(type).defaultPage;
+	}
+    
+    ...
+}
+~~~
 
-				case 'F':
-					up = new FreeSubscription(request);
-					break;
-				case 'C':
-					up = new CheapSubscription(request);
-					break;
-				case 'E':
-					up = new ExpensiveSubscription(request);
-					break;
-				default:
-					throw new ApplicationException(
-						"You did not provide a valid " +
-						"subscription type.  Please " +
-						"try again.");
-			}
--->
+By doing the refactoring described above, we had to modify multiple classes
+impacted by the changes.
+
+The database now contains a *UserProfile* table, and all the tables related
+to the subclasses were removed. It was easy to do, since all the deleted
+tables contained the same fields. As such, the *asSql()* and *asSqlUpdate()*
+methods were modified in *UserProfile*.
+
+<!-- TODO UserProfile asSql() diff -->
+~~~
+	public String asSql() {
+-		return	"INSERT INTO " + type + " (Username, " +
+-			"Password, FirstName, LastName, EmailAddress, " +
+-			"LastLogin) VALUES (\'" + normalizeSql(username) +
+-			"\', \'" + normalizeSql(password) +"\', \'" +
+-			normalizeSql(firstName) + "\', \'" +
+-			normalizeSql(lastName) + "\', \'" +
+-			normalizeSql(emailAddress) + "\', \'" +
+-			df.format(lastLogin) + "\');";
++		return	"INSERT INTO userProfile (Username, " +
++				"Password, FirstName, LastName, EmailAddress, " +
++				"LastLogin, Type) VALUES (\'" + normalizeSql(username) +
++				"\', \'" + normalizeSql(password) +"\', \'" +
++				normalizeSql(firstName) + "\', \'" +
++				normalizeSql(lastName) + "\', \'" +
++				normalizeSql(emailAddress) + "\', \'" +
++				df.format(lastLogin) + "\', \'" +
++				normalizeSql(type) + "\');";
+	}
+~~~
+
+The *findUser()* method in *UserSQLDatabase* do not need to query all the user
+tables anymore, since they were merged into the unique *UserProfile* table
+(same for *userExists()*).
+
+~~~
+public UserProfile findUser(String username) throws DatabaseException {
+    ...
+		ResultSet rs = statement.executeQuery(
+			"SELECT * FROM UserProfile WHERE " +
+			"Username = \'" + username + "\';"
+		);
+		
+		if (rs.first()) {
+			return new UserProfile(rs);
+		}
+	...
+}
+~~~
+
+As for the UI, in the *RegistrationPage* class we do not need to check which
+subscription type was selected anymore, the request's result contains the type
+of subscription and is passed to *UserProfile*'s constructor.
+
+<!-- TODO caption: diff RegistrationPage -->
+~~~
+-			UserProfile up;
+-			switch (request
+-				.getParameter("Subscription")
+-				.charAt(0)) {
+-
+-				case 'F':
+-					up = new FreeSubscription(request);
+-					break;
+-				case 'C':
+-					up = new CheapSubscription(request);
+-					break;
+-				case 'E':
+-					up = new ExpensiveSubscription(request);
+-					break;
+-				default:
+-					throw new ApplicationException(
+-						"You did not provide a valid " +
+-						"subscription type.  Please " +
+-						"try again.");
+-			}
++			UserProfile up = new UserProfile(request);
+~~~
+
+<!-- TODO caption: diff web_portal.xsl -->
+~~~
+-            <input type="radio" name="Subscription" value="Free" checked="checked" />Free Subscription<br />
+-            <input type="radio" name="Subscription" value="Cheap" />Cheap Subscription<br />
+-            <input type="radio" name="Subscription" value="Expensive" />Expensive Subscription<br />
++            <input type="radio" name="Type" value="FreeSubscription" checked="checked" />Free Subscription<br />
++            <input type="radio" name="Type" value="CheapSubscription" />Cheap Subscription<br />
++            <input type="radio" name="Type" value="ExpensiveSubscription" />Expensive Subscription<br />
+~~~
 
 ## JSONDatabase implementation
 First of all, the *softarch.portal.db.json* package as well as the
