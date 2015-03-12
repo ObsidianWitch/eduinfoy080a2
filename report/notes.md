@@ -169,7 +169,7 @@ Here we only have two databases implementations, but should the number grow
 quickly, a more dynamic solution would be to use reflection. However using
 reflection has an impact on performances and should be used as a last resort.
 
-## UserProfile subclasses code duplication
+## UserProfile & Subclasses
 
 *ExpensiveSubscription*, *CheapSubscription*, *FreeSubscription*,
 *ExpertAdministator*, *ExternalAdministrator*, *RegularAdministrator* and
@@ -260,12 +260,47 @@ public class UserProfile extends Data {
 }
 ~~~
 
+<!-- TODO rephrase
 Further code refactoring could be done, for example we could add a *String*
 field containing the type of user. Then, we could remove the
 *ExpensiveSubscription*, *CheapSubscription*, *FreeSubscription*,
 *ExpertAdministator*, *ExternalAdministrator*, *RegularAdministrator* and
 *Operator* classes. It would then be easier to add new types of users.
-<!-- TODO see if I have enough motivation to do it -->
+-->
+
+<!-- TODO
+ * removed UserProfile subclasses
+ * UserProfile
+    * Abstract -> Concrete
+    * enum UserTypes
+    * getDefaultPage()
+    * type Field
+ * ui modifs (e.g. ui.RegistrationPage, see below)
+ * fix xsl for requests
+-->
+
+<!-- TODO speak of ui.RegistrationPage -> we do not have to do a check on the
+subscription type anymore
+			switch (request
+				.getParameter("Subscription")
+				.charAt(0)) {
+
+				case 'F':
+					up = new FreeSubscription(request);
+					break;
+				case 'C':
+					up = new CheapSubscription(request);
+					break;
+				case 'E':
+					up = new ExpensiveSubscription(request);
+					break;
+				default:
+					throw new ApplicationException(
+						"You did not provide a valid " +
+						"subscription type.  Please " +
+						"try again.");
+			}
+-->
 
 ## JSONDatabase implementation
 First of all, the *softarch.portal.db.json* package as well as the
@@ -495,31 +530,8 @@ public class UserJSONDatabase extends JSONDatabase implements UserDatabase {
 }
 ~~~
 
-## Second implementation
+### Second implementation
 <!-- TODO -->
-
-<!-- TODO speak of ui.RegistrationPage -> we do not have to do a check on the
-subscription type anymore
-			switch (request
-				.getParameter("Subscription")
-				.charAt(0)) {
-
-				case 'F':
-					up = new FreeSubscription(request);
-					break;
-				case 'C':
-					up = new CheapSubscription(request);
-					break;
-				case 'E':
-					up = new ExpensiveSubscription(request);
-					break;
-				default:
-					throw new ApplicationException(
-						"You did not provide a valid " +
-						"subscription type.  Please " +
-						"try again.");
-			}
--->
 
 # Miscellaneous
 
