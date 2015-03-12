@@ -622,9 +622,6 @@ UserProfiles.
 ]
 ~~~
 
-
-<!-- TODO -->
-
 # Other flaws & ideas
 
 * the SQL driver is hard-coded to the HyperSQL JDBC driver, what if we want to use
@@ -661,10 +658,7 @@ it must go through the Logic Layer via some kind of interface."
 -> is this application really a 3-tiered system?
 
 * The UI layer would gain in clarity by using a template engine (e.g. something
-similar to twig for php, mustache.java, apache velocity)
-    
-* SQL queries are written directly in Strings, a SQLQueryBuilder and a Repository
-(e.g. Symfony2 & Doctrine) could be created to be able to reuse parts of queries
+similar to twig for php, mustache.java, apache velocity) <!-- TODO references -->
     
 * data coupled with the database layer -> **data should be decoupled from where
 it will be stored**
@@ -678,9 +672,10 @@ it will be stored**
     and vice-versa by using reflection
     * SQL
         * we could use an ORM, and the idea of repositories to store custom
-        queries if needed (e.g. Doctrine for PHP)
-        * or we could write our own simple querybuilder (to chain and easily
-        reuse queries) and store queries in repositories
+        queries if needed (e.g. Doctrine for PHP) <!-- TODO references -->
+            * SQL queries are written directly in Strings, a querybuilder and
+            repositories would enable us to reuse part of queries, and compose
+            them to create new queries
     * XML ->find a library similar to gson but for XML
     * Data.normalizeXML & Data.normalizeSql should already exist in libraries
     and should be handled at the db layer level, not in the data itself
