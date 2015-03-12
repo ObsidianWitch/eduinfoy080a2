@@ -16,48 +16,6 @@ setting. Layer-specific settings should be in the configuration file.
 requirements of the layer.
 * Identify the remaining design deficiencies and include a discussion in the
 report.
-
-# Problems & ideas
-
-* the SQL driver is forced to the HyperSQL JDBC driver, what if we want to use
-another type of SQL database (e.g. MySQL)?
-
-* Managers are only wrappers and give more or less direct access to the database
-layer, is it acceptable? See if can refactor so that more processing can be done
-by the application layer.
-
-* "A 3-tiered system really is made up of layers. The UI Layer has access to the
-Logic Layer, and the Logic Layer has access to the Data Layer. But the UI Layer
-cannot directly access the Data Layer. In order for the UI Layer to access data,
-it must go through the Logic Layer via some kind of interface."
-([source](http://allthingscs.blogspot.be/2011/03/mvc-vs-3-tier-pattern.html))
--> is this application really a 3-tiered system?
-
-* The UI layer would gain in clarity by using a template engine (e.g. something
-similar to twig for php, mustache.java, apache velocity)
-    
-* SQL queries are written directly in Strings, a SQLQueryBuilder and a Repository
-(e.g. Symfony2 & Doctrine) could be created to be able to reuse parts of queries
-    
-* data coupled with the database layer -> **data should be decoupled from where
-it will be stored**
-    * need a constructor for constructing a data entity from a database result
-    object (e.g. *public CheapSubscription(ResultSet rs)*)
-    * need a way to construct an object which can be inserted/updated into the
-    database (e.g. *asSql()*)
-    * should be handled at the database layer level
-    * -> Repository idea (e.g. Symfony2 & Doctrine)
-    * Data.normalizeXML & Data.normalizeSql should already exist in libraries and
-    should be handled at the db layer level, not in the data itself
-    * another solution: Gson's reflection (or Doctrine annotations/external yaml file)
-
-* Data, RegularData, UserProfile and RawData seem to have some inconsistencies
-in their interfaces
-    * asSql()
-    * asSql(RawData)
-    * asSqlDelete(RawData)
-    * asSqlDelete()
-    * asSqlUpdate()
     
 # Solved problems
 
@@ -532,6 +490,75 @@ public class UserJSONDatabase extends JSONDatabase implements UserDatabase {
 
 ### Second implementation
 <!-- TODO -->
+
+# Other flaws & ideas
+
+* the SQL driver is hard-coded to the HyperSQL JDBC driver, what if we want to use
+another type of SQL database (e.g. MySQL)? -> use a property in *web_portal.cfg*
+~~~
+public Connection getConnection() throws DatabaseException, SQLException {
+	// Load the HyperSQL JDBC driver:
+	try {
+		Class.forName("org.hsqldb.jdbcDriver").newInstance();
+	}
+	catch (Exception e) {
+		throw new DatabaseException(
+			"Unable to load the HyperSQL JDBC driver!");
+	}
+	
+	Connection dbConnection = DriverManager.getConnection(
+								"jdbc:hsqldb:" + dbUrl,
+								dbUser,
+								dbPassword);
+	
+	return dbConnection;
+	}
+~~~
+
+* Managers are only wrappers and give more or less direct access to the database
+layer, is it acceptable? See if can refactor so that more processing can be done
+by the application layer.
+
+* "A 3-tiered system really is made up of layers. The UI Layer has access to the
+Logic Layer, and the Logic Layer has access to the Data Layer. But the UI Layer
+cannot directly access the Data Layer. In order for the UI Layer to access data,
+it must go through the Logic Layer via some kind of interface."
+([source](http://allthingscs.blogspot.be/2011/03/mvc-vs-3-tier-pattern.html))
+-> is this application really a 3-tiered system?
+
+* The UI layer would gain in clarity by using a template engine (e.g. something
+similar to twig for php, mustache.java, apache velocity)
+    
+* SQL queries are written directly in Strings, a SQLQueryBuilder and a Repository
+(e.g. Symfony2 & Doctrine) could be created to be able to reuse parts of queries
+    
+* data coupled with the database layer -> **data should be decoupled from where
+it will be stored**
+    * situation right now:
+        * need a constructor for constructing a data entity from a database
+        result object (e.g. *public CheapSubscription(ResultSet rs)*)
+        * need a way to construct an object which can be inserted/updated into
+        the database (e.g. *asSql()*)
+    * should be handled at the database layer level
+    * JSON -> no problem, gson handles the transformation from JSON to object,
+    and vice-versa by using reflection
+    * SQL
+        * we could use an ORM, and the idea of repositories to store custom
+        queries if needed (e.g. Doctrine for PHP)
+        * or we could write our own simple querybuilder (to chain and easily
+        reuse queries) and store queries in repositories
+    * XML ->find a library similar to gson but for XML
+    * Data.normalizeXML & Data.normalizeSql should already exist in libraries
+    and should be handled at the db layer level, not in the data itself
+
+* Data, RegularData, UserProfile and RawData seem to have some inconsistencies
+in their interfaces
+    * asSql()
+    * asSql(RawData)
+    * asSqlDelete(RawData)
+    * asSqlDelete()
+    * asSqlUpdate()
+
 
 # Miscellaneous
 
