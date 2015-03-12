@@ -489,6 +489,49 @@ public class UserJSONDatabase extends JSONDatabase implements UserDatabase {
 ~~~
 
 ### Second implementation
+With the type refacoring, we do not need to separate the different subscriptions
+in multiple arrays. We just need to have the root element be an array containing
+UserProfiles.
+
+<!-- TODO caption: empty users.json document -->
+~~~
+[]
+~~~
+
+<!-- TODO caption: example users.json document -->
+~~~
+[
+    {
+        "username":"op",
+        "password":"op",
+        "firstName":"op",
+        "lastName":"op",
+        "emailAddress":"op",
+        "lastLogin":"Mar 11, 2015 9:53:40 PM",
+        "type":"Operator"
+    },
+    {
+        "username":"admin",
+        "password":"admin",
+        "firstName":"admin",
+        "lastName":"admin",
+        "emailAddress":"admin",
+        "lastLogin":"Mar 11, 2015 9:53:48 PM",
+        "type":"ExpertAdministrator"
+    },
+    {
+        "username":"test",
+        "password":"test",
+        "firstName":"test",
+        "lastName":"test",
+        "emailAddress":"test",
+        "lastLogin":"Mar 12, 2015 6:07:05 PM",
+        "type":"FreeSubscription"
+    }
+]
+~~~
+
+
 <!-- TODO -->
 
 # Other flaws & ideas
