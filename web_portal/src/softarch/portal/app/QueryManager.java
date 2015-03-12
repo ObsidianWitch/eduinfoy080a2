@@ -1,5 +1,6 @@
 package softarch.portal.app;
 
+import softarch.portal.data.RegularData;
 import softarch.portal.db.DatabaseException;
 import softarch.portal.db.DatabaseFacade;
 
@@ -29,7 +30,7 @@ public class QueryManager extends Manager {
 	 * 				to carry out the search (for example
 	 * 				"+foo -bar").
 	 */
-	public List findRecords(String informationType, String queryString)
+	public List<RegularData> findRecords(String informationType, String queryString)
 		throws ApplicationException {
 
 		try {
@@ -49,7 +50,7 @@ public class QueryManager extends Manager {
 	 * Returns a list containing all records of the given information type
 	 * that were added after the given date.
 	 */
-	public List findRecordsFrom(String informationType, Date date)
+	public List<RegularData> findRecordsFrom(String informationType, Date date)
 		throws ApplicationException {
 
 		try {

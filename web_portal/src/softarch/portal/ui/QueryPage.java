@@ -28,12 +28,10 @@ public class QueryPage extends Page {
 	 * 			send its requests to.
 	 */
 	public QueryPage(ApplicationFacade appFacade) {
-		this.appFacade		= appFacade;
-		this.title		= "Query Page";
-		this.description
-			=	"This page allows you to retrieve " +
-				"information stored in the Semantic Web " +
-				"Portal.";
+		this.appFacade = appFacade;
+		this.title = "Query Page";
+		this.description = "This page allows you to retrieve " +
+			"information stored in the Semantic Web Portal.";
 	}
 
 	/**
@@ -82,14 +80,14 @@ public class QueryPage extends Page {
 				String output = new String();
 				output += "<QueryPage_Get>";
 				output += "<QueryResult>";
-				List records = appFacade.findRecordsFrom(
+				
+				List<RegularData> records = appFacade.findRecordsFrom(
 					request.getParameter("InformationType"),
 					lastLogin);
-				for (Iterator i = records.iterator();
+				for (Iterator<RegularData> i = records.iterator();
 					i.hasNext(); )
 					
-					output += ((RegularData) i.next())
-						.asXml();
+					output += i.next().asXml();
 				
 				output += "</QueryResult>";
 				output += "</QueryPage_Get>";
@@ -101,14 +99,14 @@ public class QueryPage extends Page {
 				String output = new String();
 				output += "<QueryPage_Get>";
 				output += "<QueryResult>";
-				List records = appFacade.findRecords(
+				
+				List<RegularData> records = appFacade.findRecords(
 					request.getParameter("InformationType"),
 					request.getParameter("QueryString"));
-				for (Iterator i = records.iterator();
+				for (Iterator<RegularData> i = records.iterator();
 					i.hasNext(); )
 					
-					output += ((RegularData) i.next())
-						.asXml();
+					output += i.next().asXml();
 				
 				output += "</QueryResult>";
 				output += "</QueryPage_Get>";

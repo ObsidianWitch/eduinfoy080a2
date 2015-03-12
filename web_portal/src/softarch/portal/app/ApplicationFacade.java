@@ -76,7 +76,7 @@ public class ApplicationFacade {
 	/**
 	 * Returns a list of all users that are currently logged in.
 	 */
-	public List getActiveUsers()
+	public List<UserProfile> getActiveUsers()
 		throws ApplicationException {
 
 		return userManager.getActiveUsers();
@@ -102,7 +102,8 @@ public class ApplicationFacade {
 	 * 				to carry out the search (for example
 	 * 				"+foo -bar").
 	 */
-	public List findRecords(String informationType, String queryString)
+	public List<RegularData> findRecords(String informationType, 
+		String queryString)
 		throws ApplicationException {
 
 		return queryManager.findRecords(informationType, queryString);
@@ -112,7 +113,7 @@ public class ApplicationFacade {
 	 * Returns a list containing all records of the given information type
 	 * that were added after the given date.
 	 */
-	public List findRecordsFrom(String informationType, Date date)
+	public List<RegularData> findRecordsFrom(String informationType, Date date)
 		throws ApplicationException {
 
 		return queryManager.findRecordsFrom(informationType, date);
@@ -135,7 +136,7 @@ public class ApplicationFacade {
 	 * Returns a list that contains all raw data that is currently stored
 	 * in the raw database.
 	 */
-	public List getRawData()
+	public List<RawData> getRawData()
 		throws ApplicationException {
 
 		return administrationManager.getRawData();

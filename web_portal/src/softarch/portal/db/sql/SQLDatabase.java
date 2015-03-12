@@ -33,11 +33,11 @@ public class SQLDatabase {
 	/**
 	 * Executes the given SQL queries.
 	 */
-	public void executeSql(List queries)
+	public void executeSql(List<String> queries)
 		throws DatabaseException {
 
-		for (Iterator i = queries.iterator(); i.hasNext(); )
-			executeSql((String) i.next());
+		for (Iterator<String> i = queries.iterator(); i.hasNext(); )
+			executeSql(i.next());
 	}
 	
 	public Connection getConnection() throws DatabaseException, SQLException {

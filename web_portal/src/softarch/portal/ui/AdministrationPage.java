@@ -15,8 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Iterator;
-import java.util.Date;
-import java.net.URL;
 
 /**
  * This class implements the portal's administration page.
@@ -32,11 +30,10 @@ public class AdministrationPage extends Page {
 	 * 			send its requests to.
 	 */
 	public AdministrationPage(ApplicationFacade appFacade) {
-		this.appFacade		= appFacade;
-		this.title		= "Administration Page";
-		this.description
-			=	"This page allows you to add " +
-				"information to the Sematic Web Portal.";
+		this.appFacade = appFacade;
+		this.title = "Administration Page";
+		this.description = "This page allows you to add " +
+			"information to the Sematic Web Portal.";
 	}
 
 	/**
@@ -73,12 +70,11 @@ public class AdministrationPage extends Page {
 				.equals("ViewUnvalidatedInformation")) {
 				
 				output += "<UnvalidatedInformation>";
-				List unvalidatedRecords
-					= appFacade.getRawData();
-				for (Iterator i = unvalidatedRecords.iterator();
+				List<RawData> unvalidatedRecords = appFacade.getRawData();
+				for (Iterator<RawData> i = unvalidatedRecords.iterator();
 					i.hasNext(); )
 					
-					output += ((RawData) i.next()).asXml();
+					output += i.next().asXml();
 				output += "</UnvalidatedInformation>";
 			}
 			else if (queryType.equals("StructureOrValidate")) {

@@ -25,10 +25,9 @@ public class TestRawDatabase {
 			System.out.println(rd.getNumberOfRawRecords());
 			System.out.println();
 			System.out.println("RECORDS");
-			List l = rd.getRawData();
-			for (Iterator i = l.iterator(); i.hasNext(); )
-				System.out.println(
-					((RawData) i.next()).asXml());
+			List<RawData> l = rd.getRawData();
+			for (Iterator<RawData> i = l.iterator(); i.hasNext(); )
+				System.out.println( i.next().asXml() );
 		}
 		catch (Exception e) {
 			System.out.println(e.getMessage());

@@ -24,8 +24,8 @@ public class TestGetActiveUsers {
 			System.out.println(appFacade.login("God", "7475"));
 			System.out.println(appFacade.login("Nilipili", "7475"));
 			System.out.println(appFacade.login("Niels82", "7475"));
-			List users = appFacade.getActiveUsers();
-			for (Iterator i = users.iterator(); i.hasNext(); )
+			List<UserProfile> users = appFacade.getActiveUsers();
+			for (Iterator<UserProfile> i = users.iterator(); i.hasNext(); )
 				System.out.println(
 					((UserProfile) i.next()).asXml());
 		}

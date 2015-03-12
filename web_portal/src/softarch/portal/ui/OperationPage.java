@@ -23,12 +23,10 @@ public class OperationPage extends Page {
 	 * 			send its requests to.
 	 */
 	public OperationPage(ApplicationFacade appFacade) {
-		this.appFacade		= appFacade;
-		this.title		= "Operation Page";
-		this.description
-			=	"This page allows you to inspect the status " +
-				"of the Semantic Web Portal and start or " +
-				"stop its agents.";
+		this.appFacade = appFacade;
+		this.title = "Operation Page";
+		this.description = "This page allows you to inspect the status " +
+			"of the Semantic Web Portal and start or stop its agents.";
 	}
 
 	/**
@@ -71,9 +69,10 @@ public class OperationPage extends Page {
 				appFacade.getNumberOfRawRecords() +
 				"</NumberOfRawData>";
 			output += "<ActiveUsers>";
-			List users = appFacade.getActiveUsers();
-			for (Iterator i = users.iterator(); i.hasNext(); )
-				output += ((UserProfile) i.next()).asXml();
+			
+			List<UserProfile> users = appFacade.getActiveUsers();
+			for (Iterator<UserProfile> i = users.iterator(); i.hasNext(); )
+				output += i.next().asXml();
 			output += "</ActiveUsers>";
 			output += "</OperationPage_Get>";
 			return makePage(output);

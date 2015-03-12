@@ -67,8 +67,8 @@ public class RawData extends Data {
 	 * Returns an SQL INSERT string that allows the system to add the
 	 * <i>raw data</i> object to a relational database.
 	 */
-	public List asSql() {
-		List queries = new Vector();
+	public List<String> asSql() {
+		List<String> queries = new Vector<String>();
 		// The following check could be avoided by using a dummy
 		// structure (whose asSql method returns the SQL INSERT
 		// string below) until the raw data object is structured.

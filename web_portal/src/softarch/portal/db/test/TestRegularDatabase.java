@@ -50,9 +50,9 @@ public class TestRegularDatabase {
 				db.getNumberOfRegularRecords(informationType));
 			System.out.println();
 			System.out.println("RECORDS");
-			List result = db.findRecords(	informationType,
+			List<RegularData> result = db.findRecords(	informationType,
 							queryString);
-			for (Iterator i = result.iterator(); i.hasNext(); )
+			for (Iterator<RegularData> i = result.iterator(); i.hasNext(); )
 				System.out.println(
 					((RegularData) i.next()).asXml());
 		}

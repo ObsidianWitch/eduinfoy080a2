@@ -22,7 +22,7 @@ public class UserManager extends Manager {
 	 * Holds the session ID for each user that is currently logged in;
 	 * this is a mapping from usernames to session IDs.
 	 */
-	private Map users;
+	private Map<String, Number> users;
 
 	/**
 	 * Holds the session ID that will be issued to the next user that logs
@@ -50,7 +50,7 @@ public class UserManager extends Manager {
 		// Initialize the superclass' members:
 		this.dbFacade	= dbFacade;
 		// Initialize the class' members:
-		this.users	= new Hashtable();
+		this.users	= new Hashtable<String, Number>();
 		this.sessionId	= new Integer(0);
 	}
 
@@ -149,12 +149,12 @@ public class UserManager extends Manager {
 	/**
 	 * Returns a list of all users that are currently logged in.
 	 */
-	public List getActiveUsers()
+	public List<UserProfile> getActiveUsers()
 		throws ApplicationException {
 
 		try {
-			List result = new Vector();
-			for (Iterator i = users.keySet().iterator();
+			List<UserProfile> result = new Vector<UserProfile>();
+			for (Iterator<String> i = users.keySet().iterator();
 				i.hasNext(); ) {
 				
 				String username = (String) i.next();	

@@ -47,7 +47,7 @@ public class AdministrationManager extends Manager {
 	 * Returns a list that contains all raw data that is currently stored
 	 * in the raw database.
 	 */
-	public List getRawData()
+	public List<RawData> getRawData()
 		throws ApplicationException {
 
 		try {

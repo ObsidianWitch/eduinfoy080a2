@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import softarch.portal.data.RegularData;
 import softarch.portal.data.SoftwareRepository;
 import softarch.portal.db.RegularDatabase;
 import softarch.portal.db.sql.RegularSQLDatabase;
@@ -46,10 +47,10 @@ public class TestFindRecordsFrom {
 						"sr3",
 						"sr3",
 						new URL("http://sr3.org")));
-			List result = regularDb.findRecordsFrom(
+			List<RegularData> result = regularDb.findRecordsFrom(
 							"SoftwareRepository",
 							df.parse("2003-05-20"));
-			for (Iterator i = result.iterator(); i.hasNext(); )
+			for (Iterator<RegularData> i = result.iterator(); i.hasNext(); )
 				System.out.println(
 					((SoftwareRepository) i.next())
 						.asXml());

@@ -1,20 +1,27 @@
 package softarch.portal.ui;
 
 import javax.servlet.http.HttpServlet;
+
 import java.util.Map;
 import java.util.Hashtable;
 import java.util.Properties;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
+
 import java.io.IOException;
 import java.io.PrintWriter;
+
 import javax.xml.transform.stream.StreamSource;
+
 import java.io.StringReader;
 import java.net.URL;
+
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.Transformer;
+
 import java.io.FileInputStream;
 
 import softarch.portal.app.ApplicationFacade;
@@ -27,8 +34,8 @@ import softarch.portal.app.ApplicationFacade;
  * @author Niels Joncheere
  */
 public class InternetFrontEnd extends HttpServlet {
-	private Map 		pages		= new Hashtable();
-	private Properties	properties	= new Properties();
+	private Map<String, Page> pages = new Hashtable<String, Page>();
+	private Properties properties = new Properties();
 	
 	/**
 	 * Handles HTTP GET requests.
