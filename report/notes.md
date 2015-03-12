@@ -127,6 +127,8 @@ Here we only have two databases implementations, but should the number grow
 quickly, a more dynamic solution would be to use reflection. However using
 reflection has an impact on performances and should be used as a last resort.
 
+<!-- TODO insert diagram -->
+
 ## UserProfile & Subclasses
 
 *ExpensiveSubscription*, *CheapSubscription*, *FreeSubscription*,
@@ -691,7 +693,7 @@ in their interfaces
     * asSqlUpdate()
 
 # Façade pattern
-<!-- TODO How does the fa ̧cade pattern facilitate switching between different
+<!-- TODO How does the façade pattern facilitate switching between different
 implementations of a layer? -->
 
 # Miscellaneous
@@ -709,5 +711,3 @@ git update-index --assume-unchanged file
 ~~~
 
 ([source](https://stackoverflow.com/questions/936249/stop-tracking-and-ignore-changes-to-a-file-in-git))
-
-The following JSON parsing library was added to the project: https://jsonp.java.net/
