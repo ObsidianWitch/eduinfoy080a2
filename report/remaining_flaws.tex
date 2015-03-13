@@ -1,4 +1,26 @@
 \section{Remaining flaws}
-% TODO In this section I briefly describe the oher flaws I saw, and try to give
-% some ideas to improve the code
+
+In this section other flaws that I detected are described along with some ideas
+to fix them and to improve the code overall.
+
+\subsection*{SQL driver}
+
+The SQL driver is hard-coded to the HyperSQL JDBC driver, what if we want to use
+another type of SQL database (e.g. MySQL)? We could add two properties in
+\emph{web\_portal.cfg} which would then be used in the \emph{getConnection()}
+method of \emph{SQLDatabase} to retrieve the JDBC driver and the subprotocol
+(e.g. in \emph{jdbc:hsqldb:...}, \emph{hsqldb} is the subprotocol).
+
+\subsection*{XML}
+As of now, XML pages are created with the help of XSLT which transforms the
+given XML input into an HTML page by using an XSL document
+(\emph{web\_portal.xsl}).\\
+
+It is great, except that the XML input is produced by concatenating Strings
+(e.g. Data, Pages). It is not a real problem in the current situation, because
+the strings are small.
+But we could use an XML builder (e.g. dom4j \cite{cite:dom4j}) to produce these
+documents. First, the code would be easier to read, and secondly, it would be
+useful to reuse XML parts.
+
 \newpage
