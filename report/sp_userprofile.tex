@@ -1,0 +1,98 @@
+\subsection{UserProfile \& subclasses}
+
+\emph{ExpensiveSubscription}, \emph{CheapSubscription},
+\emph{FreeSubscription}, \emph{ExpertAdministator},
+\emph{ExternalAdministrator}, \emph{RegularAdministrator} and
+\emph{Operator} contain a lot of code duplication (constructors,
+\emph{asSql()}, \emph{asSqlUpdate()} and \emph{asXml()}), only a few strings
+are different.\\
+
+First, the \emph{getType()} abstract method was added to the \emph{UserProfile}.
+All its subclasses need to implement it by indicating the type of user.
+It will be used further below as an uniform way to know where the data must be
+added.
+
+\begin{lstlisting}
+public class UserProfile extends Data {
+    ...
+    protected abstract String getType();
+    ...
+}
+
+public class CheapSubscription extends RegularUser {
+    ...
+    
+    @Override
+	protected String getType() {
+		return "CheapSubscription";
+	}
+    ...
+}
+\end{lstlisting}
+\
+
+With the \emph{getType()} method we can modify and move the \emph{asSql()},
+\emph{asSqlUpdate()}, and \emph{asXml()} methods from the subclasses to
+\emph{UserProfile}. The constructors can also be moved.
+
+\begin{lstlisting}
+public class UserProfile extends Data {
+	public UserProfile(HttpServletRequest request) { ... }
+    public UserProfile(ResultSet rs) throws SQLException, ParseException {
+        ...
+    }
+    public UserProfile(String username, String password, String firstName,
+		String lastName, String emailAddress, Date lastLogin)
+    { ... }
+        
+    public String asXml() {
+		return	"<" + getType() + ">" +
+			"<username>" + normalizeXml(username) + "</username>" +
+			// password is not returned,
+			// as it should only be used internally
+			"<firstName>" +
+			normalizeXml(firstName) +
+			"</firstName>" +
+			"<lastName>" + normalizeXml(lastName) + "</lastName>" +
+			"<emailAddress>" +
+			normalizeXml(emailAddress) +
+			"</emailAddress>" +
+			"<lastLogin>" + df.format(lastLogin) + "</lastLogin>" +
+			"</" + getType() + ">";
+	}
+
+	/**
+	 * Returns an SQL INSERT string that allows the system to add
+	 * the account to a relational database.
+	 */
+	public String asSql() {
+		return	"INSERT INTO " + getType() + " (Username, " +
+			"Password, FirstName, LastName, EmailAddress, " +
+			"LastLogin) VALUES (\'" + normalizeSql(username) +
+			"\', \'" + normalizeSql(password) +"\', \'" +
+			normalizeSql(firstName) + "\', \'" +
+			normalizeSql(lastName) + "\', \'" +
+			normalizeSql(emailAddress) + "\', \'" +
+			df.format(lastLogin) + "\');";
+	}
+
+	/**
+	 * Returns an SQL UPDATE string that allows the system to update
+	 * the account in a relational database.
+	 */
+	public String asSqlUpdate() {
+		return  "UPDATE " + getType() + " SET Password = \'" +
+			normalizeSql(password) + "\', FirstName = \'" +
+			normalizeSql(firstName) + "\', LastName = \'" +
+			normalizeSql(lastName) + "\', EmailAddress = \'" +
+			normalizeSql(emailAddress) + "\', LastLogin = \'" +
+			df.format(lastLogin) + "\' " + "WHERE Username = \'" +
+			normalizeSql(username) + "\';";
+	}
+}
+\end{lstlisting}
+
+\subsubsection{Type refactoring}
+% TODO
+
+\newpage

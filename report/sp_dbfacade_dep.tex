@@ -1,0 +1,29 @@
+\subsection{DatabaseFacade dependencies}
+
+\begin{enumerate}
+\item \emph{InternetFrontEnd.init()}: load properties (dbUser, dbPassword and
+    dbUrl) from the configuration file (\emph{web\_portal.cfg}) and pass them to
+    \emph{ApplicationFacade}
+    
+\item \emph{ApplicationFacade} pass the properties to \emph{DatabaseFacade}
+
+\item \emph{DatabaseFacade} pass the properties to \emph{UserDatabase},
+    \emph{RegularDatabase} and \emph{RawDatabase}
+\end{enumerate}
+
+The problem with the process described above is that properties which are SQL
+related are retrieved at the presentation level and then explicitely given to
+the logic level and finally to the database level. ``The database layer
+interface should be generic, and not expose the specific requirements of the
+layer'' (cf subject).\\
+
+We would like to use other databases (e.g. JSON) than SQL ones, so we need to
+remove or modify these dependencies from DatabaseFacade. The configuration need
+to be retrieved from InternetFacade and given to the database layer by passing
+trough the application layer, so, instead of passing the individual properties
+as parameters, we can pass the \emph{Properties} object holding all properties.
+It can then be passed to the 3 different databases (user, regular and raw).\\
+
+The properties related to SQL in \emph{web\_portal.cfg} were modified to the
+following name pattern: dbSQL* (e.g. dbUser -> dbSQLUser).
+\newpage
