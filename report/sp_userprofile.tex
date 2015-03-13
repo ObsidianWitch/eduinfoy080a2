@@ -109,6 +109,7 @@ method. To still be able to retrieve the deault page, an enum was
 created. The \emph{UserTypes} enum contains the different existing types
 (e.g. ExpertAdministrator), with each type containing its default page.\\
 
+% TODO caption: enum & default page
 \begin{lstlisting}
 public class UserProfile extends Data {
     public enum UserTypes {
@@ -147,6 +148,7 @@ deleted tables contained the same fields. Consequently, the \emph{asSql()}
 and \emph{asSqlUpdate()} methods were also modified in \emph{UserProfile} as
 seen below.\\
 
+% TODO caption: UserProfile asSql() diff
 \begin{lstlisting}[language=diff]
 public String asSql() {
 -   return  "INSERT INTO " + type + " (Username, " +
@@ -195,6 +197,7 @@ check which subscription type was selected anymore, the request's result
 contains the type of subscription and is passed to \emph{UserProfile}'s
 constructor.\\
 
+% TODO caption: diff RegistrationPage
 \begin{lstlisting}[language=diff]
 -           UserProfile up;
 -           switch (request
@@ -219,6 +222,7 @@ constructor.\\
 +           UserProfile up = new UserProfile(request);
 \end{lstlisting}
 
+% TODO caption: diff web_portal.xsl
 \begin{lstlisting}[language=diff]
 - <input type="radio" name="Subscription" value="Free" checked="checked" />Free Subscription<br />
 - <input type="radio" name="Subscription" value="Cheap" />Cheap Subscription<br />

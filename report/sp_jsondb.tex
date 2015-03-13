@@ -1,5 +1,28 @@
 \subsection{JSONDatabase implementation}
 
+First of all, the \emph{softarch.portal.db.json} package as well as the
+\emph{JSONDatabase}, \emph{JSONDatabaseFactory}, \emph{RawJSONDatabase},
+\emph{RegularJSONDatabase}, \emph{UserJSONDatabase} classes were
+created. There is not much to say about the first 2 classes since they
+are similar to the SQL ones. As for \emph{RawJSONDatabase} and
+\emph{RegularJSONDatabase}, all their methods throw the following exception
+since the assignement subject specified that we did not have to implement them.\\
+
+\begin{lstlisting}
+    throw new DatabaseException("not implemented");
+\end{lstlisting}
+\
+
+Only the methods from the \emph{UserJSONDatabase} class were developed.
+By doing so, we want to be able to create subscriptions
+(\emph{FreeSubscription}, \emph{CheapSubscription},
+\emph{ExpensiveSubscription}), login and logout.\\
+
+The \emph{gson} library is used to parse and write JSON files. The lirary's jar
+(\emph{gson-2.3.1.jar}) was added to the \emph{WebContent/WEB-INF/lib}
+directory.
+% TODO add reference https://code.google.com/p/google-gson/
+
 \subsubsection{First implementation}
 
 \subsubsection{Second implementation}
