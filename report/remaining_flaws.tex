@@ -28,11 +28,44 @@ To help reusing SQL parts, they could be moved into repositories (Repository
 pattern, can be seen for example in the Doctrine ORM \cite{cite:doctrine}).
 It would help move the data itself from the way we retrieve it.
 
-% TODO
-%\begin{framehint}
-%On a side note, XML pages are created with the help of XSLT which transforms the
-%given XML input into an HTML page by using an XSL document
-%(\emph{web\_portal.xsl}).
-%\end{framehint}
+\subsection*{Presentation layer \& application layer}
+
+The presentation layer posesses multiple Pages. Each Page have \emph{doPost()}
+and \emph{doGet()} methods to handle requests for these pages. This layer should
+just be concerned about filling and sending the correct UI, but it is not the
+case in this application.\\
+
+The presentation tier calls methods from the logic tier to retrieve data from
+the database. Then, the data is manipulated (e.g. validation, instantiating the
+correct data) and finally inserted in the UI.\\
+
+\begin{lstlisting}[caption={data validation in AdministrationPage}]
+	public String doPost(	HttpServletRequest	request,
+				HttpServletResponse	response) {
+		...
+				String validate = request
+					.getParameter("Validate");
+				if (validate == null)
+					appFacade.updateRawData(rawData);
+				else {
+					appFacade.deleteRawData(rawData);
+					appFacade.add(rd);
+				}
+        ...
+    }
+\end{lstlisting}
+\
+
+There are multiple problems here, first, the application layer has a limited
+purpose here and is just used as a wrapper for methods of the database layer. It
+does not compute anything useful from the data to give to the presentation layer.
+The second problem which is a result of the first one is that the presentation
+layer gets the data and compute things with it before sending the UI.\\
+
+To summarize, the application layer is useless, the presentation layer does
+more than it should and is more or less calling directly methods from the
+database layer (through methods from \emph{ApplicationFacade} which are just
+wrappers). So, the presentation layer should delegate the manipulation of data
+to \emph{ApplicationFacade}.
 
 \newpage
