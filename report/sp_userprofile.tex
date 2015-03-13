@@ -10,7 +10,7 @@ are different.\\
 First, the \emph{getType()} abstract method was added to the \emph{UserProfile}.
 All its subclasses need to implement it by indicating the type of user.
 It will be used further below as an uniform way to know where the data must be
-added.
+added.\\
 
 \begin{lstlisting}
 public class UserProfile extends Data {
@@ -33,7 +33,7 @@ public class CheapSubscription extends RegularUser {
 
 With the \emph{getType()} method we can modify and move the \emph{asSql()},
 \emph{asSqlUpdate()}, and \emph{asXml()} methods from the subclasses to
-\emph{UserProfile}. The constructors can also be moved.
+\emph{UserProfile}. The constructors can also be moved.\\
 
 \begin{lstlisting}
 public class UserProfile extends Data {
@@ -93,6 +93,139 @@ public class UserProfile extends Data {
 \end{lstlisting}
 
 \subsubsection{Type refactoring}
-% TODO
+
+Further code refactoring was done, a \emph{String} field containing
+the type of user was added to the \emph{UserProfile} class.
+\emph{UserProfile} was also made instantiable (previously was Abstract).
+Then, the following classes were removed: \emph{ExpensiveSubscription},
+\emph{CheapSubscription}, \emph{FreeSubscription},
+\emph{ExpertAdministator}, \emph{ExternalAdministrator},
+\emph{RegularAdministrator} and \emph{Operator} classes. By doing so, it
+is easier to add new types of users.\\
+
+But these modifications are not sufficient, first of all the
+\emph{UserProfile} subclasses implemented the \emph{getDefaultPage()}
+method. To still be able to retrieve the deault page, an enum was
+created. The \emph{UserTypes} enum contains the different existing types
+(e.g. ExpertAdministrator), with each type containing its default page.\\
+
+\begin{lstlisting}
+public class UserProfile extends Data {
+    public enum UserTypes {
+        ExpertAdministrator("web_portal?Page=Administration"),
+        ExternalAdministrator("web_portal?Page=Administration"),
+        RegularAdministrator("web_portal?Page=Administration"),
+        CheapSubscription("web_portal?Page=Query"),
+        ExpensiveSubscription("web_portal?Page=Query"),
+        FreeSubscription("web_portal?Page=Query"),
+        Operator("web_portal?Page=Operation");
+        
+        private String defaultPage;
+ 
+        private UserTypes(String defaultPage) {
+            this.defaultPage = defaultPage;
+        }
+    }
+    
+    ...
+    
+    public String getDefaultPage() {
+        return UserTypes.valueOf(type).defaultPage;
+    }
+    
+    ...
+}
+\end{lstlisting}
+\
+
+By doing the refactoring described above, we had to modify multiple classes
+impacted by the changes.\\
+
+The SQL database now contains a \emph{UserProfile} table, and all the tables
+related to the subclasses were removed. It was easy to do, since all the
+deleted tables contained the same fields. Consequently, the \emph{asSql()}
+and \emph{asSqlUpdate()} methods were also modified in \emph{UserProfile} as
+seen below.\\
+
+\begin{lstlisting}[language=diff]
+public String asSql() {
+-   return  "INSERT INTO " + type + " (Username, " +
+-       "Password, FirstName, LastName, EmailAddress, " +
+-       "LastLogin) VALUES (\'" + normalizeSql(username) +
+-       "\', \'" + normalizeSql(password) +"\', \'" +
+-       normalizeSql(firstName) + "\', \'" +
+-       normalizeSql(lastName) + "\', \'" +
+-       normalizeSql(emailAddress) + "\', \'" +
+-       df.format(lastLogin) + "\');";
++   return  "INSERT INTO userProfile (Username, " +
++       "Password, FirstName, LastName, EmailAddress, " +
++       "LastLogin, Type) VALUES (\'" + normalizeSql(username) +
++       "\', \'" + normalizeSql(password) +"\', \'" +
++       normalizeSql(firstName) + "\', \'" +
++       normalizeSql(lastName) + "\', \'" +
++       normalizeSql(emailAddress) + "\', \'" +
++       df.format(lastLogin) + "\', \'" +
++       normalizeSql(type) + "\');";
+}
+\end{lstlisting}
+\
+
+The \emph{findUser()} method in \emph{UserSQLDatabase} do not need to
+query all the user tables anymore, since they were merged into the
+unique \emph{UserProfile} table (same for \emph{userExists()}).\\
+
+\begin{lstlisting}
+public UserProfile findUser(String username) throws DatabaseException {
+    ...
+        ResultSet rs = statement.executeQuery(
+            "SELECT * FROM UserProfile WHERE " +
+            "Username = \'" + username + "\';"
+        );
+        
+        if (rs.first()) {
+            return new UserProfile(rs);
+        }
+    ...
+}
+\end{lstlisting}
+\
+
+As for the UI, in the \emph{RegistrationPage} class we do not need to
+check which subscription type was selected anymore, the request's result
+contains the type of subscription and is passed to \emph{UserProfile}'s
+constructor.\\
+
+\begin{lstlisting}[language=diff]
+-           UserProfile up;
+-           switch (request
+-               .getParameter("Subscription")
+-               .charAt(0)) {
+-
+-               case 'F':
+-                   up = new FreeSubscription(request);
+-                   break;
+-               case 'C':
+-                   up = new CheapSubscription(request);
+-                   break;
+-               case 'E':
+-                   up = new ExpensiveSubscription(request);
+-                   break;
+-               default:
+-                   throw new ApplicationException(
+-                       "You did not provide a valid " +
+-                       "subscription type.  Please " +
+-                       "try again.");
+-           }
++           UserProfile up = new UserProfile(request);
+\end{lstlisting}
+
+\begin{lstlisting}[language=diff]
+- <input type="radio" name="Subscription" value="Free" checked="checked" />Free Subscription<br />
+- <input type="radio" name="Subscription" value="Cheap" />Cheap Subscription<br />
+- <input type="radio" name="Subscription" value="Expensive" />Expensive Subscription<br />
++ <input type="radio" name="Type" value="FreeSubscription" checked="checked" />Free Subscription<br />
++ <input type="radio" name="Type" value="CheapSubscription" />Cheap Subscription<br />
++ <input type="radio" name="Type" value="ExpensiveSubscription" />Expensive Subscription<br />
+\end{lstlisting}
 
 \newpage

@@ -21,7 +21,7 @@ Finally, we must be able to switch the type of database by modifying a property
 The database type can be tested to decide which classes to instantiate in
 \emph{DatabaseFacade}. However, each time we want to add a type of
 database in the application we also need to add it in the long \emph{if..else}
-of the \emph{DatabaseFacade} constructor which can be seen below.
+of the \emph{DatabaseFacade} constructor which can be seen below.\\
 
 \begin{lstlisting}
 if (dbType.equals("SQL")) {
@@ -36,7 +36,7 @@ if (dbType.equals("SQL")) {
 
 These conditions can be moved outside to avoid having a huge constructor.
 An Abstract Factory pattern was used, which may be a bit overkill in this case
-(but it was a real application of this pattern and I wanted to try it).
+(but it was a real application of this pattern and I wanted to try it).\\
 
 \begin{lstlisting}
 public interface AbstractDatabaseFactory {
