@@ -4,23 +4,35 @@ In this section other flaws that I detected are described along with some ideas
 to fix them and to improve the code overall.
 
 \subsection*{SQL driver}
-
 The SQL driver is hard-coded to the HyperSQL JDBC driver, what if we want to use
 another type of SQL database (e.g. MySQL)? We could add two properties in
 \emph{web\_portal.cfg} which would then be used in the \emph{getConnection()}
 method of \emph{SQLDatabase} to retrieve the JDBC driver and the subprotocol
 (e.g. in \emph{jdbc:hsqldb:...}, \emph{hsqldb} is the subprotocol).
 
-\subsection*{XML}
-As of now, XML pages are created with the help of XSLT which transforms the
-given XML input into an HTML page by using an XSL document
-(\emph{web\_portal.xsl}).\\
+\subsection*{Data \& database coupling}
+Data is coupled with the place it will be stored in. It can be seen in methods
+such as \emph{asSql()}, \emph{asSqlDelete()}, \emph{asXML()}, or the
+constructors with a \emph{ResultSet} parameter.\\
 
-It is great, except that the XML input is produced by concatenating Strings
-(e.g. Data, Pages). It is not a real problem in the current situation, because
-the strings are small.
-But we could use an XML builder (e.g. dom4j \cite{cite:dom4j}) to produce these
-documents. First, the code would be easier to read, and secondly, it would be
-useful to reuse XML parts.
+With the use of the \emph{gson} library, we do not have such a problem for the
+JSON format. This library handles transformation from JSON to object and
+vice-versa by using relection.\\
+
+As of now, XML documents and parts as well as SQL queries are produced by
+concatenating Strings (e.g.Data, Pages). We could instead use an XML builder
+(e.g. dom4j \cite{cite:dom4j}) and an SQL builder. First, the code would be
+easier to read, and secondly, it would be useful to reuse XML and SQL parts.\\
+
+To help reusing SQL parts, they could be moved into repositories (Repository
+pattern, can be seen for example in the Doctrine ORM \cite{cite:doctrine}).
+It would help move the data itself from the way we retrieve it.
+
+% TODO
+%\begin{framehint}
+%On a side note, XML pages are created with the help of XSLT which transforms the
+%given XML input into an HTML page by using an XSL document
+%(\emph{web\_portal.xsl}).
+%\end{framehint}
 
 \newpage
