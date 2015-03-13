@@ -18,10 +18,9 @@ By doing so, we want to be able to create subscriptions
 (\emph{FreeSubscription}, \emph{CheapSubscription},
 \emph{ExpensiveSubscription}), login and logout.\\
 
-The \emph{gson} library is used to parse and write JSON files. The lirary's jar
-(\emph{gson-2.3.1.jar}) was added to the \emph{WebContent/WEB-INF/lib}
-directory.
-% TODO add reference https://code.google.com/p/google-gson/
+The \emph{gson}\cite{cite:gson} library is used to parse and write JSON files.
+The lirary's jar (\emph{gson-2.3.1.jar}) was added to the
+\emph{WebContent/WEB-INF/lib} directory.
 
 \subsubsection{First implementation}
 
@@ -222,7 +221,7 @@ public class UserJSONDatabase extends JSONDatabase implements UserDatabase {
 
 \subsubsection{Second implementation}
 
-With the type refact    oring, we do not need to separate the different
+With the type refactoring, we do not need to separate the different
 subscriptions in multiple arrays. We just need to have the root element
 be an array containing UserProfiles.
 

@@ -109,8 +109,7 @@ method. To still be able to retrieve the deault page, an enum was
 created. The \emph{UserTypes} enum contains the different existing types
 (e.g. ExpertAdministrator), with each type containing its default page.\\
 
-% TODO caption: enum & default page
-\begin{lstlisting}
+\begin{lstlisting}[caption={UserTypes enum and default page}]
 public class UserProfile extends Data {
     public enum UserTypes {
         ExpertAdministrator("web_portal?Page=Administration"),
@@ -148,8 +147,7 @@ deleted tables contained the same fields. Consequently, the \emph{asSql()}
 and \emph{asSqlUpdate()} methods were also modified in \emph{UserProfile} as
 seen below.\\
 
-% TODO caption: UserProfile asSql() diff
-\begin{lstlisting}[language=diff]
+\begin{lstlisting}[language=diff, caption={UserProfile asSql() diff}]
 public String asSql() {
 -   return  "INSERT INTO " + type + " (Username, " +
 -       "Password, FirstName, LastName, EmailAddress, " +
@@ -197,8 +195,7 @@ check which subscription type was selected anymore, the request's result
 contains the type of subscription and is passed to \emph{UserProfile}'s
 constructor.\\
 
-% TODO caption: diff RegistrationPage
-\begin{lstlisting}[language=diff]
+\begin{lstlisting}[language=diff, caption={RegistrationPage diff}]
 -           UserProfile up;
 -           switch (request
 -               .getParameter("Subscription")
@@ -222,8 +219,7 @@ constructor.\\
 +           UserProfile up = new UserProfile(request);
 \end{lstlisting}
 
-% TODO caption: diff web_portal.xsl
-\begin{lstlisting}[language=diff]
+\begin{lstlisting}[language=diff, caption={web\_portal.xsl diff}]
 - <input type="radio" name="Subscription" value="Free" checked="checked" />Free Subscription<br />
 - <input type="radio" name="Subscription" value="Cheap" />Cheap Subscription<br />
 - <input type="radio" name="Subscription" value="Expensive" />Expensive Subscription<br />
