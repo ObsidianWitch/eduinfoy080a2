@@ -25,4 +25,240 @@ directory.
 
 \subsubsection{First implementation}
 
+\begin{framewarning}
+The first implementation was done before the type refactoring.
+\end{framewarning}
+
+The constructor instantiate the \emph{usersFile} field which is an
+instance of the \emph{File} class. This instance points to the
+\emph{users.json} file where the data will be retrieved and stored. If
+the file is not created, then a new empty JSON document is created.\\
+
+\begin{lstlisting}[caption={empty users.json document}]
+{"FreeSubscription":[],"CheapSubscription":[],"ExpensiveSubscription":[]}
+\end{lstlisting}
+\
+
+The \emph{insert(UserProfile profile)} method first retrieve the content
+of the JSON file and stores it in a \emph{JsonObject}. Then, we retrieve
+the type of the \emph{UserProfile} in order to know in which array we
+will insert the new profile. Next, the \emph{UserProfile} is transformed
+in a \emph{JsonElement} instance with the
+\emph{gson.toJsonTree(profile)} method and added to the appropriate
+array. Finally, the modified JsonObject is written to the file.\\
+
+\begin{lstlisting}[caption={FreeSubscription profile added}]
+{
+    "FreeSubscription":[
+        {
+            "username":"test",
+            "password":"test",
+            "firstName":"test",
+            "lastName":"test",
+            "emailAddress":"test",
+            "lastLogin":"Mar 11, 2015 8:58:05 AM"
+        }
+    ],
+    "CheapSubscription":[],
+    "ExpensiveSubscription":[]
+}
+\end{lstlisting}
+\
+
+\begin{framehint}
+\textbf{N.B.} We do not need an \emph{asJson()} method in \emph{UserProfile},
+Gson uses reflection in order to be able to parse any class' instance.
+\end{framehint}
+\
+
+The \emph{update(UserProfile profile)} method was implemented by first
+calling the \emph{remove(UserProfile profile)} method, which removes a
+profile based on the username, and then calling the
+\emph{insert(UserProfile profile)} method.
+Finally, \emph{userExists(String username)} just check whether
+\emph{findUser(username)} returns null.\\
+
+\begin{lstlisting}
+public class UserJSONDatabase extends JSONDatabase implements UserDatabase {
+    
+    public File usersFile;
+
+    public UserJSONDatabase(Properties properties) {
+        super(properties);
+        
+        try {
+            String dbUrl = properties.getProperty("dbJSONUrl");
+            usersFile = new File(dbUrl + "/users.json");
+            createJsonDocument();
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private boolean createJsonDocument() throws IOException {
+        boolean created = usersFile.createNewFile();
+        if (!created) { return false; }
+        
+        JsonObject jo = new JsonObject();
+        jo.add("FreeSubscription", new JsonArray());
+        jo.add("CheapSubscription", new JsonArray());
+        jo.add("ExpensiveSubscription", new JsonArray());
+        
+        Gson gson = new Gson();
+        String jsonDocument = gson.toJson(jo);
+        writeToFile(jsonDocument);
+        
+        return true;
+    }
+
+    public void insert(UserProfile profile) throws DatabaseException {
+        Gson gson = new Gson();
+        
+        JsonObject jsonParsed = getUsersJson();
+        
+        String type = profile.getType();
+        JsonElement jsonProfile = gson.toJsonTree(profile);
+        
+        JsonArray usersFromType = jsonParsed.getAsJsonArray(type);
+        usersFromType.add(jsonProfile);
+
+        try {
+            writeToFile(jsonParsed.toString());
+        } catch (IOException e) {
+            throw new DatabaseException("IOException: " + e.getMessage());
+        }
+    }
+    
+    public void update(UserProfile profile) throws DatabaseException {
+        remove(profile);
+        insert(profile);
+    }
+    
+    private void remove(UserProfile profile) throws DatabaseException {
+        String type = profile.getType();
+        JsonObject jsonParsed = getUsersJson();
+        JsonArray usersFromType = jsonParsed.getAsJsonArray(type);
+        
+        for (JsonElement userProfileElement : usersFromType) {
+            JsonObject userProfileObject = (JsonObject) userProfileElement;
+            
+            if (userProfileObject.get("username").getAsString()
+                    .equals(profile.getUsername()))
+            {
+                usersFromType.remove(userProfileElement);
+                break;
+            }
+        }
+        
+        try {
+            writeToFile(jsonParsed.toString());
+        } catch (IOException e) {
+            throw new DatabaseException("IOException: " + e.getMessage());
+        }
+    }
+
+    public UserProfile findUser(String username) throws DatabaseException {
+        Gson gson = new Gson();
+        
+        try {
+            JsonObject jsonParsed = getUsersJson();
+            for (Map.Entry<String,JsonElement> entry : jsonParsed.entrySet()) {
+                JsonArray types = (JsonArray) entry.getValue();
+                
+                for (JsonElement userProfileElement : types) {
+                    JsonObject userProfileObject = (JsonObject) userProfileElement;
+                    
+                    if (userProfileObject.get("username").getAsString()
+                            .equals(username))
+                    {
+                        return (UserProfile) gson.fromJson(
+                            userProfileObject,
+                            Class.forName("softarch.portal.data." + entry.getKey())
+                        );
+                    }
+                }
+            }
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        
+        return null;
+    }
+
+    public boolean userExists(String username) throws DatabaseException {
+        return findUser(username) != null;
+    }
+    
+    private JsonObject getUsersJson() throws DatabaseException {
+        JsonObject jsonParsed = null;
+        
+        try {
+            JsonParser parser = new JsonParser();
+            JsonElement jsonElement = parser.parse(new FileReader(usersFile));
+            jsonParsed = jsonElement.getAsJsonObject();
+        }
+        catch (FileNotFoundException e) {
+            throw new DatabaseException(
+                "File not found Exception: " + e.getMessage()
+            );
+        }
+        
+        return jsonParsed;
+    }
+    
+    private void writeToFile(String json) throws IOException {
+        OutputStreamWriter out = new OutputStreamWriter(
+                new FileOutputStream(usersFile)
+        );
+        
+        out.write(json);
+        out.close();
+    }
+
+}
+\end{lstlisting}
+
 \subsubsection{Second implementation}
+
+With the type refact    oring, we do not need to separate the different
+subscriptions in multiple arrays. We just need to have the root element
+be an array containing UserProfiles.
+
+\begin{lstlisting}[caption={empty users.json document}]
+[]
+\end{lstlisting}
+\
+
+\begin{lstlisting}[caption={users.json example}]
+[
+    {
+        "username":"op",
+        "password":"op",
+        "firstName":"op",
+        "lastName":"op",
+        "emailAddress":"op",
+        "lastLogin":"Mar 11, 2015 9:53:40 PM",
+        "type":"Operator"
+    },
+    {
+        "username":"admin",
+        "password":"admin",
+        "firstName":"admin",
+        "lastName":"admin",
+        "emailAddress":"admin",
+        "lastLogin":"Mar 11, 2015 9:53:48 PM",
+        "type":"ExpertAdministrator"
+    },
+    {
+        "username":"test",
+        "password":"test",
+        "firstName":"test",
+        "lastName":"test",
+        "emailAddress":"test",
+        "lastLogin":"Mar 12, 2015 6:07:05 PM",
+        "type":"FreeSubscription"
+    }
+]
+\end{lstlisting}
