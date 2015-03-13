@@ -1,4 +1,20 @@
 \section{Façade pattern}
-% TODO How does the façade pattern facilitate switching between different
-% implementations of a layer?
+The Façade pattern is useful to group objects which are part of a system, and
+provide a unified interface to this system. The interface only exposes methods
+that should be known to the outside. As such, a simplified interface to a
+complex system is provided. The classes using the Façade, the layer of higher
+level in our case, do not have to know about the internals of the complex
+system, it just uses the simplified interface.\\
+
+If we take \emph{DatabaseFacade} as an example, this class provides methods
+to manipulate user profiles and data (check existence, get, insert, remove,
+update). The facade do not give direct access to the database
+(e.g. insert a row in a SQL table), and we do not even know which database is
+used.\\
+
+It facilitate switching between different implementations of a layer because the
+pattern offers an unified interface. As such, if we want to switch between
+layers, we need each layer to conform to this interface, and the classes using
+this layer do not have to be modified.
+
 \newpage
