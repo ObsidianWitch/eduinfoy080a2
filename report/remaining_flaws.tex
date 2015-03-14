@@ -62,8 +62,8 @@ does not compute anything useful from the data to give to the presentation layer
 The second problem which is a result of the first one is that the presentation
 layer gets the data and compute things with it before sending the UI.\\
 
-To summarise, the application layer is useless, the presentation layer does
-more than it should and is more or less calling directly methods from the
+To summarise, the application layer is mostly useless, the presentation layer
+does more than it should and is more or less calling directly methods from the
 database layer (through methods from \emph{ApplicationFacade} which are just
 wrappers). So, the presentation layer should delegate the manipulation of data
 to \emph{ApplicationFacade}.

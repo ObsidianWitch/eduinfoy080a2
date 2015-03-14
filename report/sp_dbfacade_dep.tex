@@ -24,6 +24,41 @@ trough the application layer, so, instead of passing the individual properties
 as parameters, we can pass the \emph{Properties} object holding all properties.
 It can then be passed to the 3 different databases (user, regular and raw).\\
 
-The properties related to SQL in \emph{web\_portal.cfg} were modified to the
-following name pattern: dbSQL* (e.g. dbUser -> dbSQLUser).
+The properties related to SQL in \emph{web\_portal.cfg} were also modified to
+the following name pattern: dbSQL* (e.g. dbUser -> dbSQLUser).\\
+
+\begin{lstlisting}
+public class InternetFrontEnd extends HttpServlet {
+	public void init() throws ServletException {
+		...
+		String cfgfile = getInitParameter("config_file");
+		properties.load(new FileInputStream(cfgfile));
+		ApplicationFacade appFacade = new ApplicationFacade(properties);
+        ...
+    }
+
+public class ApplicationFacade {
+    public ApplicationFacade(Properties properties) {
+        DatabaseFacade dbFacade = new DatabaseFacade(properties);
+        ...
+    }
+}
+
+public DatabaseFacade(Properties properties) {
+	public DatabaseFacade(Properties properties) {
+		userDb    = new UserDatabase(properties);
+		regularDb = new RegularDatabase(properties);
+		rawDb     = new RawDatabase(properties);
+	}
+}
+
+public class Database {
+	public Database(Properties properties) {
+		this.dbUser	= properties.getProperty("dbSQLUser");
+		this.dbPassword	= properties.getProperty("dbSQLPassword");
+		this.dbUrl	= properties.getProperty("dbSQLUrl");
+	}
+}
+\end{lstlisting}
+
 \newpage
