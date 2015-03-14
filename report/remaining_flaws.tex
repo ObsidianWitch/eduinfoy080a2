@@ -17,7 +17,7 @@ constructors with a \emph{ResultSet} parameter.\\
 
 With the use of the \emph{gson} library, we do not have such a problem for the
 JSON format. This library handles transformation from JSON to object and
-vice-versa by using relection.\\
+vice-versa by using reflection.\\
 
 As of now, XML documents and parts as well as SQL queries are produced by
 concatenating Strings (e.g.Data, Pages). We could instead use an XML builder
@@ -30,7 +30,7 @@ It would help move the data itself from the way we retrieve it.
 
 \subsection*{Presentation layer \& application layer}
 
-The presentation layer posesses multiple Pages. Each Page have \emph{doPost()}
+The presentation layer possesses multiple Pages. Each Page have \emph{doPost()}
 and \emph{doGet()} methods to handle requests for these pages. This layer should
 just be concerned about filling and sending the correct UI, but it is not the
 case in this application.\\
@@ -62,7 +62,7 @@ does not compute anything useful from the data to give to the presentation layer
 The second problem which is a result of the first one is that the presentation
 layer gets the data and compute things with it before sending the UI.\\
 
-To summarize, the application layer is useless, the presentation layer does
+To summarise, the application layer is useless, the presentation layer does
 more than it should and is more or less calling directly methods from the
 database layer (through methods from \emph{ApplicationFacade} which are just
 wrappers). So, the presentation layer should delegate the manipulation of data
