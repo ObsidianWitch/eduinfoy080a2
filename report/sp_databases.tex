@@ -46,7 +46,6 @@ public interface AbstractDatabaseFactory {
 }
 
 public class DatabaseFactoryProducer {
-	
 	/**
 	 * Get a factory based on the type of database we want to use.
 	 * @param type of database
@@ -62,7 +61,6 @@ public class DatabaseFactoryProducer {
 }
 
 public class SQLDatabaseFactory implements AbstractDatabaseFactory {
-
 	public RawDatabase getRawDatabase(Properties properties) {
 		return new RawSQLDatabase(properties);
 	}
@@ -74,16 +72,19 @@ public class SQLDatabaseFactory implements AbstractDatabaseFactory {
 	public UserDatabase getUserDatabase(Properties properties) {
 		return new UserSQLDatabase(properties);
 	}
-
 }
 
-public DatabaseFacade(Properties properties) {
-	String dbType = properties.getProperty("dbType");
-	AbstractDatabaseFactory df = DatabaseFactoryProducer.getFactory(dbType);
-	
-	userDb    = df.getUserDatabase(properties);
-	regularDb = df.getRegularDatabase(properties);
-	rawDb     = df.getRawDatabase(properties);
+public class DatabaseFacade {
+    ...
+    public DatabaseFacade(Properties properties) {
+    	String dbType = properties.getProperty("dbType");
+    	AbstractDatabaseFactory df = DatabaseFactoryProducer.getFactory(dbType);
+    	
+    	userDb    = df.getUserDatabase(properties);
+    	regularDb = df.getRegularDatabase(properties);
+    	rawDb     = df.getRawDatabase(properties);
+    }
+    ...
 }
 \end{lstlisting}
 \
@@ -92,6 +93,17 @@ Here we only have two databases implementations, but should the number grow
 quickly, a more dynamic solution would be to use reflection. However using
 reflection has an impact on performances and should be used as a last resort.
 
-% TODO insert diagram
+\begin{figure}[h!]
+    \caption{Database layer diagram (1/2)}
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/db_diag.png}
+\end{figure}
+
+\begin{figure}[h!]
+    \caption{Database layer diagram (2/2)}
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/db_fact_diag.png}
+\end{figure}
+
 
 \newpage
